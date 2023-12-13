@@ -25,9 +25,9 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
     @Autowired
     private PeriodoRepository periodoRepository;
     private final long SEGUNDO = 5000;
-    private final int AGUARDA_RESPOSTA_USUARIO_MINUTE = 6;//15;
-    private final int NOTIFICACAO_TEMPO_INICIAL = 1;
-    private final int NOTIFICACAO_TEMPO_FINAL = 5;
+    private final int AGUARDA_RESPOSTA_USUARIO_MINUTE = 1;//6;
+    private final int NOTIFICACAO_TEMPO_INICIAL = -1;//1
+    private final int NOTIFICACAO_TEMPO_FINAL = 1;//5
     @Scheduled(fixedRate = SEGUNDO)
     public void iniciarMonitoramento(){
         System.out.println("Iniciando Monitoramento Estacionamento Variavel [" + LocalDateTime.now() + "]");
@@ -74,6 +74,8 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
         //Sistema acescentara periodo apos "AGUARDA_RESPOSTA_USUARIO_MINUTE" tempo o usuario nao responder
         boolean resultado = tempo > this.AGUARDA_RESPOSTA_USUARIO_MINUTE;
         if (resultado){
+            ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.RENOVADA);
+            this.periodoRepository.save(ultimoPeriodo);
             this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(ultimoPeriodo.getDataHoraFinal(),estacionamento));
             System.out.println("Estacionamento " + estacionamento.getIdEstacionamento() + " acrescido mais tempo");
         }

@@ -4,6 +4,7 @@ import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.dto.EstacionamentoDTO;
 import com.fiap.parking.domain.dto.VeiculoDTO;
 import com.fiap.parking.domain.model.Estacionamento;
+import com.fiap.parking.domain.model.TipoTempo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface EstacionamentoService {
 
     public List<EstacionamentoDTO> findByStatusAndTipoTempo(String status,String tipoTempo);
 
-    public EstacionamentoDTO saveFixo(EstacionamentoDTO estacionamentoDTO);
-    public EstacionamentoDTO saveVariavel(EstacionamentoDTO estacionamentoDTO);
+    public EstacionamentoDTO save(EstacionamentoDTO estacionamentoDTO, TipoTempo tipoTempo);
+    public EstacionamentoDTO condutorInformaResposta(UUID id);
 
 }

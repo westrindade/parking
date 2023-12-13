@@ -1,9 +1,11 @@
 package com.fiap.parking.domain.service.impl;
 
+import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.dto.EstacionamentoDTO;
 import com.fiap.parking.domain.model.*;
 import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.repositories.EstacionamentoRepository;
+import com.fiap.parking.domain.repositories.PeriodoRepository;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.EstacionamentoService;
 import com.fiap.parking.domain.service.PeriodoUtilService;
@@ -28,6 +30,8 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
     private CondutorRepository condutorRepository;
     @Autowired
     private PeriodoUtilService periodoUtilService;
+    @Autowired
+    private PeriodoRepository periodoRepository;
 
     @Value("${estacionamento.valorHora}")
     private BigDecimal valorHora;
@@ -40,7 +44,7 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
     @Override
     public EstacionamentoDTO findById(UUID id) {
         var estacionamento = this.toEstacionamentoDTO(this.estacionamentoRepository.findById(id)
-                .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") ) );
+                                .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") ) );
         return estacionamento;
     }
 
@@ -60,22 +64,50 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
     }
 
     @Override
-    public EstacionamentoDTO saveFixo(EstacionamentoDTO estacionamentoDTO) {
+    public EstacionamentoDTO save(EstacionamentoDTO estacionamentoDTO, TipoTempo tipoTempo){
+        var veiculo = this.veiculoRepository.findById(estacionamentoDTO.veiculo())
+                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
+        var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
+                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+
+        TipoTempo tempoEnum = TipoTempo.valueOf(tipoTempo.toString().toUpperCase());
+        return tempoEnum == TipoTempo.FIXO ?
+                this.saveFixo(condutor,veiculo,estacionamentoDTO) :
+                this.saveVariavel(condutor,veiculo,estacionamentoDTO);
+    }
+
+    @Override
+    public EstacionamentoDTO condutorInformaResposta(UUID id){
+        Estacionamento estacionamento = this.estacionamentoRepository.findById(id)
+                                            .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") );
+        estacionamento.setStatus(StatusEstacionamento.ENCERRADO);
+        estacionamento.setValorTotal(this.calcularValorTotalVariavel(estacionamento));
+
+        System.out.println("estacionamento");
+        System.out.println(estacionamento);
+        this.encerraUltimoPeriodo(estacionamento.getPeriodos());
+        this.estacionamentoRepository.save(estacionamento);
+        return this.toEstacionamentoDTO(estacionamento);
+    }
+
+    private void encerraUltimoPeriodo(List<Periodo> periodos){
+        Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(periodos)
+                .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
+
+        ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
+        this.periodoRepository.save(ultimoPeriodo);
+    }
+    private EstacionamentoDTO saveFixo(Condutor condutor, Veiculo veiculo, EstacionamentoDTO estacionamentoDTO) {
         Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
         estacionamento.setValorHora(this.valorHora);
         estacionamento.setTipoTempo(TipoTempo.FIXO);
         estacionamento.setStatus(StatusEstacionamento.ABERTO);
 
-        var veiculo = this.veiculoRepository.findById(estacionamentoDTO.veiculo())
-                                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
-        var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
-                                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
-
-        List<Periodo> periodos = this.addPeriodoFixo(estacionamentoDTO,estacionamento);
+        List<Periodo> periodos = this.saveNewPeriodoFixo(estacionamentoDTO,estacionamento);
         if (periodos.isEmpty()) {
             throw new IllegalArgumentException("Período não informado");
         }
-        BigDecimal valorTotal = this.calcularValorTotal(estacionamentoDTO);
+        BigDecimal valorTotal = this.calcularValorTotalFixo(estacionamentoDTO);
 
         estacionamento.setValorTotal(valorTotal);
         estacionamento.setPeriodos(periodos);
@@ -85,17 +117,11 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
         return this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
     }
 
-    @Override
-    public EstacionamentoDTO saveVariavel(EstacionamentoDTO estacionamentoDTO) {
+    private EstacionamentoDTO saveVariavel(Condutor condutor, Veiculo veiculo, EstacionamentoDTO estacionamentoDTO) {
         Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
         estacionamento.setValorHora(this.valorHora);
         estacionamento.setTipoTempo(TipoTempo.VARIAVEL);
         estacionamento.setStatus(StatusEstacionamento.ABERTO);
-
-        var veiculo = this.veiculoRepository.findById(estacionamentoDTO.veiculo())
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
-        var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
-                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
 
         LocalDateTime dataInicial = LocalDateTime.now();
         List<Periodo> periodos = new ArrayList<>();
@@ -108,19 +134,22 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
         return this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
     }
 
-    private BigDecimal calcularValorTotal(EstacionamentoDTO estacionamentoDTO){
+    private BigDecimal calcularValorTotalFixo(EstacionamentoDTO estacionamentoDTO){
         BigDecimal valorTotal = new BigDecimal("0.00");
         for (Periodo periodo : estacionamentoDTO.periodos()) {
-
             valorTotal = this.valorHora.multiply(BigDecimal.valueOf(
                     this.periodoUtilService.calcularIntervaloHoras(periodo.getDataHoraInicial(),periodo.getDataHoraFinal())
             ));
         }
-
         return valorTotal;
     }
 
-    private List<Periodo> addPeriodoFixo(EstacionamentoDTO estacionamentoDTO,Estacionamento estacionamento){
+    private BigDecimal calcularValorTotalVariavel(Estacionamento estacionamento){
+        int totalPeriodos = estacionamento.getPeriodos().size();
+        return this.valorHora.multiply(new BigDecimal(totalPeriodos));
+    }
+
+    private List<Periodo> saveNewPeriodoFixo(EstacionamentoDTO estacionamentoDTO,Estacionamento estacionamento){
         List<Periodo> periodos = new ArrayList<>();
         for (Periodo periodo : estacionamentoDTO.periodos()) {
             periodo.setEstacionamento(estacionamento);
