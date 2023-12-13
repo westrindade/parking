@@ -37,9 +37,15 @@ public class EstacionamentoController {
         return ResponseEntity.ok(this.estacionamentoService.findByStatusAndTipoTempo(status,tipoTempo));
     }
 
-    @PostMapping
-    public ResponseEntity<EstacionamentoDTO> save(@RequestBody EstacionamentoDTO estacionamentoDTO){
-        estacionamentoDTO = this.estacionamentoService.save(estacionamentoDTO);
+    @PostMapping("/fixo")
+    public ResponseEntity<EstacionamentoDTO> saveFixo(@RequestBody EstacionamentoDTO estacionamentoDTO){
+        estacionamentoDTO = this.estacionamentoService.saveFixo(estacionamentoDTO);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(estacionamentoDTO);
+    }
+
+    @PostMapping("/variavel")
+    public ResponseEntity<EstacionamentoDTO> saveVariavel(@RequestBody EstacionamentoDTO estacionamentoDTO){
+        estacionamentoDTO = this.estacionamentoService.saveVariavel(estacionamentoDTO);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(estacionamentoDTO);
     }
 }

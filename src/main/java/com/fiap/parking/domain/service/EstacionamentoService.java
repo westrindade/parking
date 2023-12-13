@@ -17,5 +17,6 @@ public interface EstacionamentoService {
 
     public List<EstacionamentoDTO> findByStatusAndTipoTempo(String status,String tipoTempo);
 
-    public EstacionamentoDTO save(EstacionamentoDTO estacionamentoDTO);
+    public EstacionamentoDTO saveFixo(EstacionamentoDTO estacionamentoDTO);
+    public EstacionamentoDTO saveVariavel(EstacionamentoDTO estacionamentoDTO);
 }

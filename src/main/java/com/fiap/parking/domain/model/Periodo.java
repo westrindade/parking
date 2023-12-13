@@ -23,6 +23,12 @@ public class Periodo {
     @Column(name = "acao_Periodo")
     AcaoPeriodo acaoPeriodo;
 
+    @Column(name = "notificacaoEnviada")
+    NotificacaoEnviada notificacaoEnviada;
+    @Column(name = "dt_hr_notificacao")
+    LocalDateTime dataHoraNotificacao;
+
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cd_estacionamento", referencedColumnName = "cd_estacionamento", nullable = true)
