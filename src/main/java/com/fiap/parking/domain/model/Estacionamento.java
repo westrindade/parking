@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "tb_estacionamento")
 public class Estacionamento {
 
-    public Estacionamento(){}
+    public Estacionamento(){ }
 
     public Estacionamento(TipoTempo tipoTempo, String longitude, String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusEstacionamento status) {
         this.tipoTempo = tipoTempo;
@@ -56,6 +56,6 @@ public class Estacionamento {
     @Column(name = "status")
     private StatusEstacionamento status;
 
-    @OneToMany(mappedBy = "estacionamento", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "estacionamento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Periodo> periodos;
 }

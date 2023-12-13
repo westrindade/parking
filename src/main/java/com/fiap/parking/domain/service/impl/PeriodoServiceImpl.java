@@ -26,15 +26,10 @@ public class PeriodoServiceImpl implements PeriodoService {
         Estacionamento estacionamento = this.estacionamentoRepository.findById(estacionamento_id)
                 .orElseThrow(() -> new IllegalArgumentException("Estacionamento não existe"));
 
-        Optional<Periodo> ultimoPeriodo = this.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
-        LocalDateTime dataInicial = ultimoPeriodo.get().getDataHoraFinal().plusMinutes(1);
+        Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
+        //LocalDateTime dataInicial = ultimoPeriodo.get().getDataHoraFinal().plusSeconds(1);
 
-        this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(dataInicial,estacionamento));
+        this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
     }
 
-    private Optional<Periodo> ordenarDecrescentePegarPrimeiro(List<Periodo> listaDePeriodos) {
-        return listaDePeriodos.stream()
-                .sorted(Comparator.comparing(Periodo::getDataHoraFinal).reversed())
-                .findFirst();
-    }
 }

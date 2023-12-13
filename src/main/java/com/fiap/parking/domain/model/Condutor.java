@@ -40,7 +40,7 @@ public class Condutor {
     @Column(name = "tp_pagamento", nullable = true)
     private TipoPagamento tipoPagamentoPadrao;
 
-    @OneToMany(mappedBy = "condutor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "condutor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Veiculo> veiculos;
 
     public Condutor(){}

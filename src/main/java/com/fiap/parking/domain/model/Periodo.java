@@ -33,4 +33,15 @@ public class Periodo {
     @ManyToOne
     @JoinColumn(name = "cd_estacionamento", referencedColumnName = "cd_estacionamento", nullable = true)
     private Estacionamento estacionamento;
+
+    @Override
+    public String toString() {
+        return "Periodo{" +
+                "estacionamento='" + this.getEstacionamento().getIdEstacionamento() + '\'' +
+                ", dataInicial='" + this.getDataHoraInicial() + '\'' +
+                ", dataFinal='" + this.getDataHoraFinal() + '\'' +
+                ", AcaoPeriodo='" + this.getAcaoPeriodo() + '\'' +
+                ", getDataHoraNotificacao='" + this.getDataHoraNotificacao() + '\'' +
+                '}';
+    }
 }

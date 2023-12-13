@@ -113,7 +113,7 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
         for (Periodo periodo : estacionamentoDTO.periodos()) {
 
             valorTotal = this.valorHora.multiply(BigDecimal.valueOf(
-                    this.calcularIntervaloHoras(periodo.getDataHoraInicial(),periodo.getDataHoraFinal())
+                    this.periodoUtilService.calcularIntervaloHoras(periodo.getDataHoraInicial(),periodo.getDataHoraFinal())
             ));
         }
 
@@ -133,11 +133,6 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
         }
 
         return periodos;
-    }
-
-    private long calcularIntervaloHoras(LocalDateTime dataInicio, LocalDateTime dataFim){
-        Duration duracao = Duration.between(dataInicio, dataFim);
-        return duracao.toHours() == 0 ? 1 : duracao.toHours() ;
     }
 
     private EstacionamentoDTO toEstacionamentoDTO(Estacionamento estacionamento) {
