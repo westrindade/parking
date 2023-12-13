@@ -1,27 +1,39 @@
-🚀 Parquimetro
-Tech-challenge-FASE2 com temática de criar um sistema mais atual para parquimetro. 
+# 🚀 Parquímetro
+Tech-challenge Fase 2 com temática de criar um sistema mais atual para parquimetro. 
 O objetivo é refazer uma solução de parquímetros, que atualmente apresenta atrasos e erros na gravação e leitura dos dados. Você deve modernizar o código, implementando uma solução otimizada e eficiente.
 
-🛠️ Tecnologias
-JavaJava 17
+## 🛠️ Tecnologias
 
-SpringSpring Boot 3.1.4
+![Java](https://skillicons.dev/icons?i=java)Java 17
 
-Spring Spring Data JPA
+![Spring](https://skillicons.dev/icons?i=spring)Spring Boot 3.1.4
 
-Spring Spring Doc/Swagger
+![Spring](https://skillicons.dev/icons?i=spring)
+Spring Data JPA
 
-H2 H2
+![Spring](https://skillicons.dev/icons?i=spring)
+Spring Doc/Swagger
 
-Java Lombok
+![H2](https://skillicons.dev/icons?i=scala)
+H2
 
-Java Bean Validation
+![Java](https://skillicons.dev/icons?i=java)
+Lombok
 
-⌨️ Acesso Swagger
-  GET /swagger
-✒️ Autores
-Denis Benjamim
-Matheus Lot Rizzo
-Bruno de Jesus
-Weslei Trindade
-Nicole Bidigaray
+![Java](https://skillicons.dev/icons?i=java)
+Bean Validation
+
+
+## ⌨️ Acesso Swagger
+```http
+  GET /swagger-ui/index.html
+```
+
+## ✒️ Autores
+
+- [Denis Benjamim](https://www.github.com/denisbenjamim)
+- [Matheus Lot Rizzo](https://www.github.com/MatheusLotRizzo)
+- [Bruno de Jesus](https://www.github.com/brujp)
+- [Weslei Trindade](https://www.github.com/westrindade)
+- [Nicole Bidigaray](https://www.github.com/Nicole-Bidigaray)
+
