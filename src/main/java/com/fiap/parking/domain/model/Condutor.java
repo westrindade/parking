@@ -41,7 +41,6 @@ public class Condutor {
     private TipoPagamento tipoPagamentoPadrao;
 
     @OneToMany(mappedBy = "condutor", cascade = CascadeType.ALL)
-    /*private List<Veiculo> veiculos = new ArrayList<>();*/
     private List<Veiculo> veiculos;
 
     public Condutor(){}

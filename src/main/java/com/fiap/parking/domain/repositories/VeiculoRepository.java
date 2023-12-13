@@ -12,4 +12,5 @@ import java.util.List;
 public interface VeiculoRepository extends JpaRepository<Veiculo,String> {
     @Query("SELECT v FROM Veiculo v WHERE v.condutor.cpf = :cpf")
     List<Veiculo> findByCondutorCpf(@Param("cpf") String cpf);
+
 }
