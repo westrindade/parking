@@ -25,9 +25,9 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
     @Autowired
     private PeriodoRepository periodoRepository;
     private final long SEGUNDO = 5000;
-    private final int AGUARDA_RESPOSTA_USUARIO_MINUTE = 1;//6;
-    private final int NOTIFICACAO_TEMPO_INICIAL = -1;//1
-    private final int NOTIFICACAO_TEMPO_FINAL = 1;//5
+    private final int AGUARDA_RESPOSTA_USUARIO_MINUTE = 6;
+    private final int NOTIFICACAO_TEMPO_INICIAL = -1;
+    private final int NOTIFICACAO_TEMPO_FINAL = 5;
     @Scheduled(fixedRate = SEGUNDO)
     public void iniciarMonitoramento(){
         System.out.println("Iniciando Monitoramento Estacionamento Variavel [" + LocalDateTime.now() + "]");
