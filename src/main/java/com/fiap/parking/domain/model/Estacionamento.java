@@ -27,7 +27,7 @@ public class Estacionamento {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name="cd_estacionamento", unique = true)
-    private UUID idEstacionamento;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "condutor_cpf")

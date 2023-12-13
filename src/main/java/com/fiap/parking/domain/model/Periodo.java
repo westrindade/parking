@@ -28,7 +28,6 @@ public class Periodo {
     @Column(name = "dt_hr_notificacao")
     LocalDateTime dataHoraNotificacao;
 
-
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cd_estacionamento", referencedColumnName = "cd_estacionamento", nullable = true)
@@ -37,7 +36,7 @@ public class Periodo {
     @Override
     public String toString() {
         return "Periodo{" +
-                "estacionamento='" + this.getEstacionamento().getIdEstacionamento() + '\'' +
+                "estacionamento='" + this.getEstacionamento().getId() + '\'' +
                 ", dataInicial='" + this.getDataHoraInicial() + '\'' +
                 ", dataFinal='" + this.getDataHoraFinal() + '\'' +
                 ", AcaoPeriodo='" + this.getAcaoPeriodo() + '\'' +

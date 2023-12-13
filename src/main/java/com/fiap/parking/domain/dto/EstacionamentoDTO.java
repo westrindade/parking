@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record EstacionamentoDTO(
-        UUID idEstacionamento,
+        UUID id,
         TipoTempo tipoTempo,
         String veiculo,
         String condutor,

@@ -77,7 +77,7 @@ public class MonitorareEstacionamentoFixo implements MonitoramentoEstacionamento
             estacionamento.setStatus(StatusEstacionamento.ENCERRADO);
             estacionamentoRepository.save(estacionamento);
 
-            System.out.println("Estacionamento " + estacionamento.getIdEstacionamento() + " encerrado");
+            System.out.println("Estacionamento " + estacionamento.getId() + " encerrado");
         }
     }
 }

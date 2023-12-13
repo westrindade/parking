@@ -69,6 +69,7 @@ public class Condutor {
                 ", nome='" + this.nome + '\'' +
                 // Evite chamar toString() na lista de veículos para evitar recursão infinita
                 ", veiculos=" + (this.veiculos != null ? this.veiculos.size() : "null") +
+                ",TipoPagamentoPadrao=" + this.tipoPagamentoPadrao +
                 '}';
     }
 }

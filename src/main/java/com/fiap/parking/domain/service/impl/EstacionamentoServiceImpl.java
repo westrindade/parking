@@ -166,7 +166,7 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
 
     private EstacionamentoDTO toEstacionamentoDTO(Estacionamento estacionamento) {
         return new EstacionamentoDTO(
-                estacionamento.getIdEstacionamento(),
+                estacionamento.getId(),
                 estacionamento.getTipoTempo(),
                 estacionamento.getVeiculo().getPlaca(),
                 estacionamento.getCondutor().getCpf(),
