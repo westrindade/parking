@@ -3,6 +3,7 @@ package com.fiap.parking.domain.service;
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.dto.EstacionamentoDTO;
 import com.fiap.parking.domain.dto.VeiculoDTO;
+import com.fiap.parking.domain.model.Estacionamento;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface EstacionamentoService {
 
     public EstacionamentoDTO saveFixo(EstacionamentoDTO estacionamentoDTO);
     public EstacionamentoDTO saveVariavel(EstacionamentoDTO estacionamentoDTO);
+
 }

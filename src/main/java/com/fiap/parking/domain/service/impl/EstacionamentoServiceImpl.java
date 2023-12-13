@@ -6,6 +6,7 @@ import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.repositories.EstacionamentoRepository;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.EstacionamentoService;
+import com.fiap.parking.domain.service.PeriodoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +26,8 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
     private VeiculoRepository veiculoRepository;
     @Autowired
     private CondutorRepository condutorRepository;
-
+    @Autowired
+    private PeriodoUtilService periodoUtilService;
 
     @Value("${estacionamento.valorHora}")
     private BigDecimal valorHora;
@@ -97,25 +97,15 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
         var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
                 .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
 
+        LocalDateTime dataInicial = LocalDateTime.now();
         List<Periodo> periodos = new ArrayList<>();
-        periodos.add(this.addHoraPeriodoVariavel(estacionamento));
+        periodos.add(this.periodoUtilService.addHoraPeriodo(dataInicial,estacionamento));
 
         estacionamento.setPeriodos(periodos);
         estacionamento.setCondutor(condutor);
         estacionamento.setVeiculo(veiculo);
 
         return this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
-    }
-
-    private Periodo addHoraPeriodoVariavel(Estacionamento estacionamento){
-        LocalDateTime dataInicial = LocalDateTime.now();
-
-        Periodo periodo = new Periodo();
-        periodo.setEstacionamento(estacionamento);
-        periodo.setDataHoraInicial(dataInicial);
-        periodo.setDataHoraFinal(dataInicial.plusHours(1));
-
-        return periodo;
     }
 
     private BigDecimal calcularValorTotal(EstacionamentoDTO estacionamentoDTO){

@@ -12,6 +12,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "tb_estacionamento")
 public class Estacionamento {
+
+    public Estacionamento(){}
+
     public Estacionamento(TipoTempo tipoTempo, String longitude, String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusEstacionamento status) {
         this.tipoTempo = tipoTempo;
         this.longitude = longitude;
