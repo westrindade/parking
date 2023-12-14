@@ -3,6 +3,7 @@ package com.fiap.parking.domain.controller;
 import com.fiap.parking.domain.dto.EstacionamentoDTO;
 import com.fiap.parking.domain.model.TipoTempo;
 import com.fiap.parking.domain.service.EstacionamentoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -41,7 +42,7 @@ public class EstacionamentoController {
     }
 
     @PostMapping("/fixo")
-    public ResponseEntity<?> saveFixo(@RequestBody EstacionamentoDTO estacionamentoDTO){
+    public ResponseEntity<?> saveFixo(@Valid @RequestBody EstacionamentoDTO estacionamentoDTO){
         return this.estacionamentoService.save(estacionamentoDTO, TipoTempo.FIXO);
     }
 

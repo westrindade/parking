@@ -15,7 +15,7 @@ public class Periodo {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name="cd_estacionamento_periodo", unique = true)
-    private UUID idPeriodo;
+    private UUID id;
     @Column(name = "dt_hr_inicial")
     LocalDateTime dataHoraInicial;
     @Column(name = "dt_hr_final")

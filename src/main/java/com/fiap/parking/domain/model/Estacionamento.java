@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -30,15 +31,16 @@ public class Estacionamento {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "condutor_cpf")
+    @JoinColumn(name = "condutor_cpf",nullable = false)
     private Condutor condutor;
 
     @ManyToOne
-    @JoinColumn(name = "veiculo_placa")
+    @JoinColumn(name = "veiculo_placa",nullable = false)
     private Veiculo veiculo;
 
+    @NotNull(message = "O tipo de tempo precisa ser informado")
     @Enumerated(EnumType.STRING)
-    @Column(name = "tp_tempo", nullable = true)
+    @Column(name = "tp_tempo", nullable = false)
     private TipoTempo tipoTempo;
 
     @Column(name = "longitude")

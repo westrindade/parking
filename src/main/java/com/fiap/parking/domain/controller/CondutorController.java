@@ -2,6 +2,7 @@ package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.CondutorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -27,7 +28,7 @@ public class CondutorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody CondutorDTO condutorDTO){
+    public ResponseEntity<?> save(@Valid @RequestBody CondutorDTO condutorDTO){
         return this.condutorService.save(condutorDTO);
     }
 

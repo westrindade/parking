@@ -1,6 +1,8 @@
 package com.fiap.parking.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,10 +17,15 @@ public class Condutor {
     @Id
     @Column(name = "cpf", unique = true)
     private String cpf;
+
+    @NotBlank(message = "O nome precisa ser informado")
     @Column(name = "nome")
     private String nome;
+
+    @NotNull(message = "O celular precisa ser informado")
     @Column(name = "celular")
     private String celular;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "dt_nascimento")
     private LocalDate dataNascimento;

@@ -2,6 +2,7 @@ package com.fiap.parking.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ public class Pagamento {
     @Column(name = "dt_hr")
     LocalDateTime dataHora;
 
+    @NotBlank(message = "O tipo de pagamento precisa ser informado")
     @Column(name = "tp_pagamento", nullable = false)
     private TipoPagamento tipoPagamento;
 
