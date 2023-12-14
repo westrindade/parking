@@ -7,6 +7,10 @@ import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.CondutorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,20 +25,33 @@ public class CondutoServiceImpl implements CondutorService {
     private CondutorRepository condutorRepository;
 
     @Override
-    public List<CondutorDTO> findAll() {
+    public ResponseEntity<?> findAll() {
+        try {
         var condutor = this.condutorRepository.findAll();
-        return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
+//        return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
+                    condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList())
+            );
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @Override
-    public CondutorDTO findByCpf(String cpf) {
-        var condutor =  this.condutorRepository.findById(cpf)
-                                                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
-        return this.toCondutorDTO(condutor);
+    public ResponseEntity<?> findByCpf(String cpf) {
+        try {
+            var condutor =  this.condutorRepository.findById(cpf)
+                    .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.toCondutorDTO(condutor));
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @Override
-    public CondutorDTO save(CondutorDTO condutorDTO) {
+    public ResponseEntity<?> save(CondutorDTO condutorDTO) {
         Condutor condutor = toCondutor(condutorDTO);
 
         List<Veiculo> veiculos = new ArrayList<>();
@@ -44,21 +61,37 @@ public class CondutoServiceImpl implements CondutorService {
         }
         condutor.setVeiculos(veiculos);
 
-        return toCondutorDTO(this.condutorRepository.save(condutor));
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED).body(toCondutorDTO(this.condutorRepository.save(condutor)));
+        } catch (JpaSystemException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @Override
-    public void savePayment(String cpf, String tipoPagamento) {
+    public ResponseEntity<?> savePayment(String cpf, String tipoPagamento) {
 
-        String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
-        if (Arrays.stream(TipoPagamento.values())
-                .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
-            throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
+        try {
+
+            String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
+            if (Arrays.stream(TipoPagamento.values())
+                    .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
+                throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
+            }
+            var condutor =  this.condutorRepository.findById(cpf)
+                    .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+            //Condutor condutor = toCondutor(this.findByCpf(cpf) );
+            condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
+
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.condutorRepository.save(condutor));
+
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
-
-        Condutor condutor = toCondutor(this.findByCpf(cpf) );
-        condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
-        this.condutorRepository.save(condutor);
     }
 
     private CondutorDTO toCondutorDTO(Condutor condutor) {

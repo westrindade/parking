@@ -17,24 +17,24 @@ public class CondutorController {
     private CondutorService condutorService;
 
     @GetMapping
-    public ResponseEntity<Collection<CondutorDTO>> ListarTodos(){
-        return ResponseEntity.ok(this.condutorService.findAll());
+    public ResponseEntity<?> ListarTodos(){
+        return this.condutorService.findAll();
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity<CondutorDTO> Obter(@PathVariable String cpf){
-        return ResponseEntity.ok(this.condutorService.findByCpf(cpf));
+    public ResponseEntity<?> Obter(@PathVariable String cpf){
+        return this.condutorService.findByCpf(cpf);
     }
 
     @PostMapping
-    public ResponseEntity<CondutorDTO> save(@RequestBody CondutorDTO condutorDTO){
-        condutorDTO = this.condutorService.save(condutorDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(condutorDTO);
+    public ResponseEntity<?> save(@RequestBody CondutorDTO condutorDTO){
+        //condutorDTO = this.condutorService.save(condutorDTO);
+        return this.condutorService.save(condutorDTO);
     }
 
     @PutMapping("/{cpf}/salvarTipoPgto")
-    public void savaPayment(@PathVariable String cpf,
+    public ResponseEntity<?> savaPayment(@PathVariable String cpf,
                             @RequestParam String tipoPagamento){
-        this.condutorService.savePayment(cpf,tipoPagamento);
+        return this.condutorService.savePayment(cpf,tipoPagamento);
     }
 }
