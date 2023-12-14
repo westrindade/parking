@@ -20,8 +20,7 @@ public class PagamentoController {
     @Autowired
     PagamentoService pagamentoService;
     @PostMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> pagamento(@PathVariable UUID id){
-        PagamentoDTO pagamentoDTO = pagamentoService.pagamento(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pagamentoDTO);
+    public ResponseEntity<?> pagamento(@PathVariable UUID id){
+        return this.pagamentoService.pagamento(id);
     }
 }

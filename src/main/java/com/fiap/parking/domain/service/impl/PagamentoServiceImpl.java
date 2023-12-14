@@ -9,6 +9,9 @@ import com.fiap.parking.domain.repositories.EstacionamentoRepository;
 import com.fiap.parking.domain.repositories.PagamentoRepository;
 import com.fiap.parking.domain.service.PagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,23 +25,31 @@ public class PagamentoServiceImpl implements PagamentoService {
     @Autowired
     private PagamentoRepository pagamentoRepository;
     @Override
-    public PagamentoDTO pagamento(UUID idEstacionamento) {
-        Estacionamento estacionamento = this.estacionamentoRepository.findById(idEstacionamento)
-                .orElseThrow(()-> new IllegalArgumentException("Estacionamento nao encontrado"));
+    public ResponseEntity<?> pagamento(UUID idEstacionamento) {
 
-        this.variavel(estacionamento);
+        try{
+            Estacionamento estacionamento = this.estacionamentoRepository.findById(idEstacionamento)
+                    .orElseThrow(()-> new IllegalArgumentException("Estacionamento nao encontrado"));
 
-        Pagamento pagamento = new Pagamento();
-        pagamento.setTipoPagamento(estacionamento.getCondutor().getTipoPagamentoPadrao());
-        pagamento.setStatus(StatusPagamento.SUCESSO);
-        pagamento.setEstacionamento(estacionamento);
-        pagamento.setValor(estacionamento.getValorTotal());
-        pagamento.setDataHora(LocalDateTime.now());
+            this.variavel(estacionamento);
 
-        this.pagamentoRepository.save(pagamento);
+            Pagamento pagamento = new Pagamento();
+            pagamento.setTipoPagamento(estacionamento.getCondutor().getTipoPagamentoPadrao());
+            pagamento.setStatus(StatusPagamento.SUCESSO);
+            pagamento.setEstacionamento(estacionamento);
+            pagamento.setValor(estacionamento.getValorTotal());
+            pagamento.setDataHora(LocalDateTime.now());
 
-        System.out.println("Pagamento finalizado");
-        return this.toPagamentoDTO(pagamento);
+            this.pagamentoRepository.save(pagamento);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.toPagamentoDTO(pagamento));
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (JpaSystemException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     private void variavel(Estacionamento estacionamento){
