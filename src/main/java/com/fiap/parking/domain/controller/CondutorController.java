@@ -3,6 +3,7 @@ package com.fiap.parking.domain.controller;
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.CondutorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class CondutorController {
     @PostMapping
     public ResponseEntity<CondutorDTO> save(@RequestBody CondutorDTO condutorDTO){
         condutorDTO = this.condutorService.save(condutorDTO);
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(condutorDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(condutorDTO);
     }
 
     @PutMapping("/{cpf}/salvarTipoPgto")

@@ -4,6 +4,7 @@ import com.fiap.parking.domain.dto.EstacionamentoDTO;
 import com.fiap.parking.domain.model.TipoTempo;
 import com.fiap.parking.domain.service.EstacionamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,13 +43,13 @@ public class EstacionamentoController {
     @PostMapping("/fixo")
     public ResponseEntity<EstacionamentoDTO> saveFixo(@RequestBody EstacionamentoDTO estacionamentoDTO){
         estacionamentoDTO = this.estacionamentoService.save(estacionamentoDTO, TipoTempo.FIXO);
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(estacionamentoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(estacionamentoDTO);
     }
 
     @PostMapping("/variavel")
     public ResponseEntity<EstacionamentoDTO> saveVariavel(@RequestBody EstacionamentoDTO estacionamentoDTO){
         estacionamentoDTO = this.estacionamentoService.save(estacionamentoDTO, TipoTempo.VARIAVEL);
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(estacionamentoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(estacionamentoDTO);
     }
 
     @PutMapping("/condutor-encerra/{id}")

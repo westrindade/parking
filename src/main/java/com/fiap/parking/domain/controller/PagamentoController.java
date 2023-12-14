@@ -3,6 +3,7 @@ package com.fiap.parking.domain.controller;
 import com.fiap.parking.domain.dto.PagamentoDTO;
 import com.fiap.parking.domain.service.PagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,6 @@ public class PagamentoController {
     @PostMapping("/{id}")
     public ResponseEntity<PagamentoDTO> pagamento(@PathVariable UUID id){
         PagamentoDTO pagamentoDTO = pagamentoService.pagamento(id);
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(pagamentoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pagamentoDTO);
     }
 }

@@ -5,6 +5,7 @@ import com.fiap.parking.domain.dto.PeriodoDTO;
 import com.fiap.parking.domain.service.PeriodoService;
 import com.fiap.parking.domain.service.PeriodoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,8 @@ public class PeriodoController {
     @Autowired
     private PeriodoService periodoService;
     @PostMapping("/{estacionamento_id}")
-    public void save(@PathVariable UUID estacionamento_id){
+    public ResponseEntity<?> save(@PathVariable UUID estacionamento_id){
         this.periodoService.save(estacionamento_id);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
