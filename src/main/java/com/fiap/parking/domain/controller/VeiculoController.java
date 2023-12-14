@@ -16,12 +16,12 @@ public class VeiculoController {
     @Autowired
     private VeiculoService veiculoService;
     @GetMapping("/{cpf}")
-    public ResponseEntity<Collection<VeiculoDTO>> ListarTodos(@PathVariable String cpf){
-        return ResponseEntity.ok(this.veiculoService.findByCondutorCpf(cpf));
+    public ResponseEntity<?> ListarTodos(@PathVariable String cpf){
+        return this.veiculoService.findByCondutorCpf(cpf);
     }
 
     @GetMapping("/procurar-veiculo/{placa}")
-    public ResponseEntity<VeiculoDTO> Obter(@PathVariable String placa){
-        return ResponseEntity.ok(this.veiculoService.findById(placa));
+    public ResponseEntity<?> Obter(@PathVariable String placa){
+        return this.veiculoService.findById(placa);
     }
 }

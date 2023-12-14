@@ -5,6 +5,9 @@ import com.fiap.parking.domain.model.Veiculo;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.VeiculoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -17,19 +20,32 @@ public class VeiculoServiceImpl implements VeiculoService {
     @Autowired
     private VeiculoRepository veiculoRepository;
     @Override
-    public List<VeiculoDTO> findByCondutorCpf(String cpf) {
-        var veiculo = this.veiculoRepository.findByCondutorCpf(cpf);
-                //.orElseThrow( () -> new IllegalArgumentException("Não encontrado veiculo") ));
+    public ResponseEntity<?> findByCondutorCpf(String cpf) {
 
-        return veiculo.stream().map(this::toVeiculoDTO).collect(Collectors.toList());
+        try {
+            var veiculo = this.veiculoRepository.findByCondutorCpf(cpf);
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
+                    veiculo.stream().map(this::toVeiculoDTO).collect(Collectors.toList())
+            );
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @Override
-    public VeiculoDTO findById(String placa) {
-        var veiculo = this.toVeiculoDTO(this.veiculoRepository.findById(placa)
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") ));
+    public ResponseEntity<?> findById(String placa) {
+        try {
+            var veiculo = this.toVeiculoDTO(this.veiculoRepository.findById(placa)
+                    .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") ));
 
-        return veiculo;
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(veiculo);
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     private VeiculoDTO toVeiculoDTO(Veiculo veiculo){
