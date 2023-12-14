@@ -28,7 +28,6 @@ public class CondutorController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody CondutorDTO condutorDTO){
-        //condutorDTO = this.condutorService.save(condutorDTO);
         return this.condutorService.save(condutorDTO);
     }
 

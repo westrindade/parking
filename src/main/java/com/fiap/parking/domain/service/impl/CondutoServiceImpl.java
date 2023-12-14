@@ -27,8 +27,8 @@ public class CondutoServiceImpl implements CondutorService {
     @Override
     public ResponseEntity<?> findAll() {
         try {
-        var condutor = this.condutorRepository.findAll();
-//        return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
+            var condutor = this.condutorRepository.findAll();
+
             return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
                     condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList())
             );
@@ -44,7 +44,7 @@ public class CondutoServiceImpl implements CondutorService {
                     .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
             return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.toCondutorDTO(condutor));
         } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -63,6 +63,8 @@ public class CondutoServiceImpl implements CondutorService {
 
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(toCondutorDTO(this.condutorRepository.save(condutor)));
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
         } catch (Exception ex) {
@@ -88,7 +90,7 @@ public class CondutoServiceImpl implements CondutorService {
             return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.condutorRepository.save(condutor));
 
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
