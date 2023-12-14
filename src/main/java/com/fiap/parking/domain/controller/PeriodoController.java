@@ -19,7 +19,6 @@ public class PeriodoController {
     private PeriodoService periodoService;
     @PostMapping("/{estacionamento_id}")
     public ResponseEntity<?> save(@PathVariable UUID estacionamento_id){
-        this.periodoService.save(estacionamento_id);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return this.periodoService.save(estacionamento_id);
     }
 }

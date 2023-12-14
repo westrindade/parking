@@ -87,7 +87,7 @@ public class CondutoServiceImpl implements CondutorService {
             //Condutor condutor = toCondutor(this.findByCpf(cpf) );
             condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.condutorRepository.save(condutor));
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Tipo de Pagamento incluido ao condutor");
 
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

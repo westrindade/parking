@@ -8,6 +8,9 @@ import com.fiap.parking.domain.repositories.PeriodoRepository;
 import com.fiap.parking.domain.service.PeriodoService;
 import com.fiap.parking.domain.service.PeriodoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,14 +25,23 @@ public class PeriodoServiceImpl implements PeriodoService {
     @Autowired
     private PeriodoUtilService periodoUtilService;
     @Override
-    public void save(UUID estacionamento_id) {
-        Estacionamento estacionamento = this.estacionamentoRepository.findById(estacionamento_id)
-                .orElseThrow(() -> new IllegalArgumentException("Estacionamento não existe"));
+    public ResponseEntity<?> save(UUID estacionamento_id) {
+        try{
+            Estacionamento estacionamento = this.estacionamentoRepository.findById(estacionamento_id)
+                    .orElseThrow(() -> new IllegalArgumentException("Estacionamento não existe"));
 
-        Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
-        //LocalDateTime dataInicial = ultimoPeriodo.get().getDataHoraFinal().plusSeconds(1);
+            Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
 
-        this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
+            this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Periodo salvo com sucesso");
+        } catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (JpaSystemException ex) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
 }

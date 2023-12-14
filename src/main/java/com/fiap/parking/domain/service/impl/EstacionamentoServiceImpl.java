@@ -137,7 +137,7 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
             this.encerraUltimoPeriodo(estacionamento.getPeriodos());
             estacionamento = this.estacionamentoRepository.save(estacionamento);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.toEstacionamentoDTO(estacionamento).valorTotal());
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.toEstacionamentoDTO(estacionamento).valorTotal());
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {

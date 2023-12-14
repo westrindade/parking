@@ -41,7 +41,7 @@ public class PagamentoServiceImpl implements PagamentoService {
             pagamento.setDataHora(LocalDateTime.now());
 
             this.pagamentoRepository.save(pagamento);
-            
+
             return ResponseEntity.status(HttpStatus.CREATED).body(this.toPagamentoDTO(pagamento));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
