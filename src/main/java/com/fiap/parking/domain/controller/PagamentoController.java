@@ -1,13 +1,17 @@
 package com.fiap.parking.domain.controller;
 
-import com.fiap.parking.domain.dto.PagamentoDTO;
-import com.fiap.parking.domain.model.Estacionamento;
-import com.fiap.parking.domain.model.Pagamento;
-import com.fiap.parking.domain.model.StatusPagamento;
+import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.PagamentoService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,17 +19,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Tag(name = "Pagamento",description = "Pagamento do estacionamento realizado pelo condutor")
 @RestController
 @RequestMapping("/pagamento")
 public class PagamentoController {
 
     @Autowired
     PagamentoService pagamentoService;
+
+    @ApiOperation(value = "Pagar estacionamento")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pagamento realizado com sucesso",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Estacionamento não encontrado",
+                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "409", description = "Erro no preenchimento",
+                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
+    })
     @PostMapping("/{estacionamento_id}")
-    public ResponseEntity<?> pagamento(@PathVariable UUID estacionamento_id){
+    public ResponseEntity<?> pagamento(
+            @Parameter(in = ParameterIn.PATH, description = "Id do estacionamento")
+            @PathVariable UUID estacionamento_id){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(this.pagamentoService.pagamento(estacionamento_id));
         } catch (IllegalArgumentException ex){
