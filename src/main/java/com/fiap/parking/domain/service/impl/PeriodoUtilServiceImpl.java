@@ -1,6 +1,6 @@
 package com.fiap.parking.domain.service.impl;
 
-import com.fiap.parking.domain.model.Estacionamento;
+import com.fiap.parking.domain.model.Parquimetro;
 import com.fiap.parking.domain.model.Periodo;
 import com.fiap.parking.domain.service.PeriodoUtilService;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,10 @@ import java.util.Optional;
 @Service
 public class PeriodoUtilServiceImpl implements PeriodoUtilService {
     @Override
-    public Periodo adicionaPeriodoVariavel(LocalDateTime dataUltimoPeriodo, Estacionamento estacionamento) {
+    public Periodo adicionaPeriodoVariavel(LocalDateTime dataUltimoPeriodo, Parquimetro parquimetro) {
         LocalDateTime dataInicial = dataUltimoPeriodo.plusSeconds(1);
         Periodo periodo = new Periodo();
-        periodo.setEstacionamento(estacionamento);
+        periodo.setParquimetro(parquimetro);
         periodo.setDataHoraInicial(dataInicial);
         periodo.setDataHoraFinal(dataInicial.plusHours(1));
 

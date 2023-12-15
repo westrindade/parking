@@ -1,9 +1,9 @@
 package com.fiap.parking.domain.schedule.impl;
 
 import com.fiap.parking.domain.model.*;
-import com.fiap.parking.domain.repositories.EstacionamentoRepository;
+import com.fiap.parking.domain.repositories.ParquimetroRepository;
 import com.fiap.parking.domain.repositories.PeriodoRepository;
-import com.fiap.parking.domain.schedule.MonitoramentoEstacionamento;
+import com.fiap.parking.domain.schedule.MonitoramentoParquimetro;
 import com.fiap.parking.domain.service.PeriodoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacionamento {
+public class MonitorarParquimetroVariavel implements MonitoramentoParquimetro {
 
     @Autowired
-    private EstacionamentoRepository estacionamentoRepository;
+    private ParquimetroRepository parquimetroRepository;
     @Autowired
     private PeriodoUtilService periodoUtilService;
 
@@ -30,13 +30,13 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
     private final int NOTIFICACAO_TEMPO_FINAL = 5;
     @Scheduled(fixedRate = SEGUNDO)
     public void iniciarMonitoramento(){
-        System.out.println("Iniciando Monitoramento Estacionamento Variavel [" + LocalDateTime.now() + "]");
-        Optional<Estacionamento> estacionamentoList = estacionamentoRepository.findByStatusAndTipoTempo(
-                StatusEstacionamento.ABERTO,TipoTempo.VARIAVEL);
-        List<Estacionamento> estacionamentos = estacionamentoList.map(Collections::singletonList).orElse(Collections.emptyList());
+        System.out.println("Iniciando Monitoramento Parquimetro Variavel [" + LocalDateTime.now() + "]");
+        Optional<Parquimetro> parquimetroList = parquimetroRepository.findByStatusAndTipoParquimetro(
+                StatusParquimetro.ABERTO, TipoParquimetro.VARIAVEL);
+        List<Parquimetro> parquimetros = parquimetroList.map(Collections::singletonList).orElse(Collections.emptyList());
 
-        for(Estacionamento estacionamento : estacionamentos){
-            this.executar(estacionamento);
+        for(Parquimetro parquimetro : parquimetros){
+            this.executar(parquimetro);
         }
     }
 
@@ -45,15 +45,15 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
                 LocalDateTime.now());
     }
 
-    private void executar(Estacionamento estacionamento){
-        if (!estacionamento.getPeriodos().isEmpty()){
-            Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos())
+    private void executar(Parquimetro parquimetro){
+        if (!parquimetro.getPeriodos().isEmpty()){
+            Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos())
                     .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
 
             long tempoCalculado = this.calcularTempoPeriodo(ultimoPeriodo);
 
             this.enviarNotificacao(tempoCalculado,ultimoPeriodo);
-            this.saveProximoPeriodo(tempoCalculado,ultimoPeriodo,estacionamento);
+            this.saveProximoPeriodo(tempoCalculado,ultimoPeriodo,parquimetro);
             //caso o usuario responder , a finalizacao sera no endpoint de resposta
         }
     }
@@ -66,18 +66,18 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
             ultimoPeriodo.setNotificacaoEnviada(NotificacaoEnviada.SIM);
             this.periodoRepository.save(ultimoPeriodo);
 
-            System.out.println("Notificacao para o estacionamento " + ultimoPeriodo.getEstacionamento() + " enviada");
+            System.out.println("Notificacao para o parquimetro " + ultimoPeriodo.getParquimetro() + " enviada");
         }
     }
 
-    private void saveProximoPeriodo(long tempo, Periodo ultimoPeriodo, Estacionamento estacionamento){
+    private void saveProximoPeriodo(long tempo, Periodo ultimoPeriodo, Parquimetro parquimetro){
         //Sistema acescentara periodo apos "AGUARDA_RESPOSTA_USUARIO_MINUTE" tempo o usuario nao responder
         boolean resultado = tempo > this.AGUARDA_RESPOSTA_USUARIO_MINUTE;
         if (resultado){
             ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.RENOVADA);
             this.periodoRepository.save(ultimoPeriodo);
-            this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.getDataHoraFinal(),estacionamento));
-            //System.out.println("Estacionamento " + estacionamento.getId() + " acrescido mais tempo");
+            this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.getDataHoraFinal(),parquimetro));
+            //System.out.println("Parquimtro " + parquimetro.getId() + " acrescido mais tempo");
         }
     }
 }

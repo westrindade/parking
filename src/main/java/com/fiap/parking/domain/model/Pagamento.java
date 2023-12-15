@@ -1,6 +1,8 @@
 package com.fiap.parking.domain.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -29,6 +31,6 @@ public class Pagamento {
     private BigDecimal valor;
 
     @ManyToOne
-    @JoinColumn(name = "cd_estacionamento", referencedColumnName = "cd_estacionamento")
-    private Estacionamento estacionamento;
+    @JoinColumn(name = "cd_parquimetro", referencedColumnName = "cd_parquimetro")
+    private Parquimetro parquimetro;
 }

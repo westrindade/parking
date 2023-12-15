@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@Tag(name = "Periodo",description = "Periodo que o veiculo ficara estacionamento")
+@Tag(name = "Periodo",description = "Periodo que o veiculo ficara parquimetro")
 @RestController
 @RequestMapping("/periodo")
 public class PeriodoController {
@@ -29,19 +29,19 @@ public class PeriodoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Periodo salvo com sucesso",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
-            @ApiResponse(responseCode = "404", description = "Estacionamento não encontrado",
+            @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "409", description = "Erro no preenchimento",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
     })
-    @PostMapping("/{estacionamento_id}")
+    @PostMapping("/{parquimetro_id}")
     public ResponseEntity<?> save(
-            @Parameter(in = ParameterIn.PATH, description = "Id do estacionamento")
-            @PathVariable UUID estacionamento_id){
+            @Parameter(in = ParameterIn.PATH, description = "Id do parquimetro")
+            @PathVariable UUID parquimetro_id){
         try{
-            this.periodoService.save(estacionamento_id);
+            this.periodoService.save(parquimetro_id);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Periodo salvo com sucesso");
         } catch (IllegalArgumentException ex){

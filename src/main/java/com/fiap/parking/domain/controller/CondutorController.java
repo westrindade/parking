@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Condutor",description = "Condutor que utilizara o estacionamento")
+@Tag(name = "Condutor",description = "Condutor que utilizara o parquimetro")
 @RestController
 @RequestMapping("/condutores")
 public class CondutorController {

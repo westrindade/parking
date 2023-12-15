@@ -1,9 +1,9 @@
 package com.fiap.parking.domain.schedule.impl;
 
 import com.fiap.parking.domain.model.*;
-import com.fiap.parking.domain.repositories.EstacionamentoRepository;
+import com.fiap.parking.domain.repositories.ParquimetroRepository;
 import com.fiap.parking.domain.repositories.PeriodoRepository;
-import com.fiap.parking.domain.schedule.MonitoramentoEstacionamento;
+import com.fiap.parking.domain.schedule.MonitoramentoParquimetro;
 import com.fiap.parking.domain.service.PeriodoUtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class MonitorareEstacionamentoFixo implements MonitoramentoEstacionamento {
+public class MonitorareParquimetroFixo implements MonitoramentoParquimetro {
     @Autowired
-    private EstacionamentoRepository estacionamentoRepository;
+    private ParquimetroRepository parquimetroRepository;
     @Autowired
     private PeriodoUtilService periodoUtilService;
 
@@ -25,18 +25,18 @@ public class MonitorareEstacionamentoFixo implements MonitoramentoEstacionamento
     private PeriodoRepository periodoRepository;
     private final long SEGUNDO = 1000 * 60 * 30; //30minutos
     private final int NOTIFICACAO_TEMPO = -5;
-    private final int ENCERRA_ESTACIONAMENTO = 0;
+    private final int ENCERRA_PARQUIMETRO = 0;
 
     @Scheduled(fixedRate = SEGUNDO)
     public void iniciarMonitoramento(){
 
-        System.out.println("Iniciando Monitoramento Estacionamento Fixo [" + LocalDateTime.now() + "]");
-        Optional<Estacionamento> estacionamentoList = estacionamentoRepository.findByStatusAndTipoTempo(
-                StatusEstacionamento.ABERTO,TipoTempo.FIXO);
-        List<Estacionamento> estacionamentos = estacionamentoList.map(Collections::singletonList).orElse(Collections.emptyList());
+        System.out.println("Iniciando Monitoramento Parquimetro Fixo [" + LocalDateTime.now() + "]");
+        Optional<Parquimetro> parquimetroList = parquimetroRepository.findByStatusAndTipoParquimetro(
+                StatusParquimetro.ABERTO, TipoParquimetro.FIXO);
+        List<Parquimetro> parquimetros = parquimetroList.map(Collections::singletonList).orElse(Collections.emptyList());
 
-        for(Estacionamento estacionamento : estacionamentos){
-            this.executar(estacionamento);
+        for(Parquimetro parquimetro : parquimetros){
+            this.executar(parquimetro);
         }
     }
 
@@ -45,15 +45,15 @@ public class MonitorareEstacionamentoFixo implements MonitoramentoEstacionamento
                 LocalDateTime.now());
     }
 
-    private void executar(Estacionamento estacionamento){
-        if (!estacionamento.getPeriodos().isEmpty()){
-            Periodo periodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos())
+    private void executar(Parquimetro parquimetro){
+        if (!parquimetro.getPeriodos().isEmpty()){
+            Periodo periodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos())
                     .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
 
             long tempoCalculado = this.calcularTempoPeriodo(periodo);
 
             this.enviarNotificacao(tempoCalculado,periodo);
-            this.encerrarEstacionamento(tempoCalculado,estacionamento);
+            this.encerrarParquimetro(tempoCalculado,parquimetro);
         }
     }
 
@@ -66,18 +66,18 @@ public class MonitorareEstacionamentoFixo implements MonitoramentoEstacionamento
                 ultimoPeriodo.setNotificacaoEnviada(NotificacaoEnviada.SIM);
                 this.periodoRepository.save(ultimoPeriodo);
 
-                System.out.println("Notificacao para o estacionamento " + ultimoPeriodo.getEstacionamento() + " enviada");
+                System.out.println("Notificacao para o parquimtro " + ultimoPeriodo.getParquimetro() + " enviada");
             }
         }
     }
 
-    private void encerrarEstacionamento(long tempo, Estacionamento estacionamento){
-        boolean resultado = tempo > this.ENCERRA_ESTACIONAMENTO;
+    private void encerrarParquimetro(long tempo, Parquimetro parquimetro){
+        boolean resultado = tempo > this.ENCERRA_PARQUIMETRO;
         if (resultado) {
-            estacionamento.setStatus(StatusEstacionamento.ENCERRADO);
-            estacionamentoRepository.save(estacionamento);
+            parquimetro.setStatus(StatusParquimetro.ENCERRADO);
+            parquimetroRepository.save(parquimetro);
 
-            System.out.println("Estacionamento " + estacionamento.getId() + " encerrado");
+            System.out.println("ParquimetroList " + parquimetro.getId() + " encerrado");
         }
     }
 }

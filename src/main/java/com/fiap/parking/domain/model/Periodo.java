@@ -9,12 +9,12 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "tb_estacionamento_periodo")
+@Table(name = "tb_parquimetro_periodo")
 public class Periodo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="cd_estacionamento_periodo", unique = true)
+    @Column(name="cd_parquimetro_periodo", unique = true)
     private UUID id;
     @Column(name = "dt_hr_inicial")
     LocalDateTime dataHoraInicial;
@@ -30,13 +30,13 @@ public class Periodo {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "cd_estacionamento", referencedColumnName = "cd_estacionamento", nullable = true)
-    private Estacionamento estacionamento;
+    @JoinColumn(name = "cd_parquimetro", referencedColumnName = "cd_parquimetro", nullable = true)
+    private Parquimetro parquimetro;
 
     @Override
     public String toString() {
         return "Periodo{" +
-                "estacionamento='" + this.getEstacionamento().getId() + '\'' +
+                "parquimetro='" + this.getParquimetro().getId() + '\'' +
                 ", dataInicial='" + this.getDataHoraInicial() + '\'' +
                 ", dataFinal='" + this.getDataHoraFinal() + '\'' +
                 ", AcaoPeriodo='" + this.getAcaoPeriodo() + '\'' +

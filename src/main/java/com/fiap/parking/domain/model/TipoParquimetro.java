@@ -1,5 +1,5 @@
 package com.fiap.parking.domain.model;
 
-public enum TipoTempo {
+public enum TipoParquimetro {
     FIXO, VARIAVEL
 }

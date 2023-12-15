@@ -7,5 +7,5 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 @Service
 public interface PagamentoService {
-    public PagamentoDTO  pagamento(UUID idEstacionamento);
+    public PagamentoDTO pagamento(UUID parquimetro_id);
 }

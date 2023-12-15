@@ -9,13 +9,13 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "tb_estacionamento")
-public class Estacionamento {
+@Table(name = "tb_parquimetro")
+public class Parquimetro {
 
-    public Estacionamento(){ }
+    public Parquimetro(){ }
 
-    public Estacionamento(TipoTempo tipoTempo, String longitude, String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusEstacionamento status) {
-        this.tipoTempo = tipoTempo;
+    public Parquimetro(TipoParquimetro tipoParquimetro, String longitude, String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status) {
+        this.tipoParquimetro = tipoParquimetro;
         this.longitude = longitude;
         this.latitude = latitude;
         this.valorHora = valorHora;
@@ -25,7 +25,7 @@ public class Estacionamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="cd_estacionamento", unique = true)
+    @Column(name="cd_parquimetro", unique = true)
     private UUID id;
 
     @ManyToOne
@@ -37,8 +37,8 @@ public class Estacionamento {
     private Veiculo veiculo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tp_tempo", nullable = false)
-    private TipoTempo tipoTempo;
+    @Column(name = "tipoParquimetro", nullable = false)
+    private TipoParquimetro tipoParquimetro;
 
     @Column(name = "longitude")
     private String longitude;
@@ -53,8 +53,8 @@ public class Estacionamento {
     private BigDecimal valorTotal;
 
     @Column(name = "status")
-    private StatusEstacionamento status;
+    private StatusParquimetro status;
 
-    @OneToMany(mappedBy = "estacionamento", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "parquimetro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Periodo> periodos;
 }

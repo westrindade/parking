@@ -1,5 +1,5 @@
 package com.fiap.parking.domain.model;
 
-public enum StatusEstacionamento {
+public enum StatusParquimetro {
     ENCERRADO, ABERTO
 }

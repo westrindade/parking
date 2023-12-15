@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@Tag(name = "Pagamento",description = "Pagamento do estacionamento realizado pelo condutor")
+@Tag(name = "Pagamento",description = "Pagamento do parquimetro realizado pelo condutor")
 @RestController
 @RequestMapping("/pagamento")
 public class PagamentoController {
@@ -29,23 +29,23 @@ public class PagamentoController {
     @Autowired
     PagamentoService pagamentoService;
 
-    @ApiOperation(value = "Pagar estacionamento")
+    @ApiOperation(value = "Pagar parquimetro")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Pagamento realizado com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
-            @ApiResponse(responseCode = "404", description = "Estacionamento não encontrado",
+            @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "409", description = "Erro no preenchimento",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
     })
-    @PostMapping("/{estacionamento_id}")
+    @PostMapping("/{parquimetro_id}")
     public ResponseEntity<?> pagamento(
-            @Parameter(in = ParameterIn.PATH, description = "Id do estacionamento")
-            @PathVariable UUID estacionamento_id){
+            @Parameter(in = ParameterIn.PATH, description = "Id do parquimetro")
+            @PathVariable UUID parquimetro_id){
         try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.pagamentoService.pagamento(estacionamento_id));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.pagamentoService.pagamento(parquimetro_id));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
