@@ -25,34 +25,27 @@ public class PagamentoServiceImpl implements PagamentoService {
     @Autowired
     private PagamentoRepository pagamentoRepository;
     @Override
-    public ResponseEntity<?> pagamento(UUID idEstacionamento) {
+    public PagamentoDTO pagamento(UUID idEstacionamento) {
 
-        try{
-            Estacionamento estacionamento = this.estacionamentoRepository.findById(idEstacionamento)
-                    .orElseThrow(()-> new IllegalArgumentException("Estacionamento nao encontrado"));
+        Estacionamento estacionamento = this.estacionamentoRepository.findById(idEstacionamento)
+                .orElseThrow(()-> new IllegalArgumentException("Estacionamento nao encontrado"));
 
-            this.variavel(estacionamento);
+        this.tipoEstacionamentoVariavel(estacionamento);
 
-            Pagamento pagamento = new Pagamento();
-            pagamento.setTipoPagamento(estacionamento.getCondutor().getTipoPagamentoPadrao());
-            pagamento.setStatus(StatusPagamento.SUCESSO);
-            pagamento.setEstacionamento(estacionamento);
-            pagamento.setValor(estacionamento.getValorTotal());
-            pagamento.setDataHora(LocalDateTime.now());
+        Pagamento pagamento = new Pagamento();
+        pagamento.setTipoPagamento(estacionamento.getCondutor().getTipoPagamentoPadrao());
+        pagamento.setStatus(StatusPagamento.SUCESSO);
+        pagamento.setEstacionamento(estacionamento);
+        pagamento.setValor(estacionamento.getValorTotal());
+        pagamento.setDataHora(LocalDateTime.now());
 
-            this.pagamentoRepository.save(pagamento);
+        this.pagamentoRepository.save(pagamento);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.toPagamentoDTO(pagamento));
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        return this.toPagamentoDTO(pagamento);
+
     }
 
-    private void variavel(Estacionamento estacionamento){
+    private void tipoEstacionamentoVariavel(Estacionamento estacionamento){
         if (estacionamento.getCondutor().getTipoPagamentoPadrao() == TipoPagamento.PIX){
             throw new IllegalStateException("PIX não é aceito em estadia VARIAVEL");
         }

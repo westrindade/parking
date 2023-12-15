@@ -41,128 +41,79 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
     private BigDecimal valorHora;
 
     @Override
-    public ResponseEntity<?> findAll() {
-        try {
-            var estacionamento = this.estacionamentoRepository.findAll();
-
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
-                    estacionamento.stream().map(this::toEstacionamentoDTO).collect(Collectors.toList())
-            );
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+    public List<EstacionamentoDTO> findAll() {
+        var estacionamento = this.estacionamentoRepository.findAll();
+        return estacionamento.stream().map(this::toEstacionamentoDTO).collect(Collectors.toList());
     }
 
     @Override
-    public ResponseEntity<?> findById(UUID id) {
-
-        try {
-            var estacionamento = this.toEstacionamentoDTO(this.estacionamentoRepository.findById(id)
-                    .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") ) );
-
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(estacionamento);
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+    public EstacionamentoDTO findById(UUID id) {
+        var estacionamento = this.toEstacionamentoDTO(this.estacionamentoRepository.findById(id)
+                .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") ) );
+        return estacionamento;
     }
 
     @Override
-    public ResponseEntity<?> findByStatus(String status) {
+    public List<EstacionamentoDTO> findByStatus(String status) {
         StatusEstacionamento statusCast = this.converterStringParaStatus(status);
-
-        try {
-            var estacionamento = this.estacionamentoRepository.findByStatus(statusCast);
-
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
-                    estacionamento.stream().map(this::toEstacionamentoDTO).collect(Collectors.toList())
-            );
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        var estacionamento = this.estacionamentoRepository.findByStatus(statusCast);
+        return estacionamento.stream().map(this::toEstacionamentoDTO).collect(Collectors.toList());
     }
 
     @Override
-    public ResponseEntity<?> findByStatusAndTipoTempo(String status, String tipoTempo) {
+    public List<EstacionamentoDTO> findByStatusAndTipoTempo(String status, String tipoTempo) {
         StatusEstacionamento statusCast = this.converterStringParaStatus(status);
         TipoTempo tipoTempoCast = this.converterStringParaTipoTempo(tipoTempo);
 
-        try {
-            var estacionamento = this.estacionamentoRepository.findByStatusAndTipoTempo(statusCast,tipoTempoCast);
-
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
-                    estacionamento.stream().map(this::toEstacionamentoDTO).collect(Collectors.toList())
-            );
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        var estacionamento = this.estacionamentoRepository.findByStatusAndTipoTempo(statusCast,tipoTempoCast);
+        return estacionamento.stream().map(this::toEstacionamentoDTO).collect(Collectors.toList());
     }
 
     @Override
-    public ResponseEntity<?> save(EstacionamentoDTO estacionamentoDTO, TipoTempo tipoTempo){
-        try{
-            var veiculo = this.veiculoRepository.findById(estacionamentoDTO.veiculo())
-                    .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
-            var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
-                    .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+    public EstacionamentoDTO  save(EstacionamentoDTO estacionamentoDTO, TipoTempo tipoTempo){
 
-            Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
-            estacionamento.setValorHora(this.valorHora);
-            estacionamento.setTipoTempo(tipoTempo);
-            estacionamento.setStatus(StatusEstacionamento.ABERTO);
+        var veiculo = this.veiculoRepository.findById(estacionamentoDTO.veiculo())
+                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
+        var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
+                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
 
-            List<Periodo> periodos;
-            if (TipoTempo.FIXO == tipoTempo){
-                periodos = this.adicionarPeriodoFixo(estacionamento);
-                estacionamento.setValorTotal(this.calcularValorTotalFixo(estacionamentoDTO));
-            } else {
-                LocalDateTime dataInicial = LocalDateTime.now();
-                periodos = new ArrayList<>();
-                periodos.add(this.periodoUtilService.adicionaPeriodoVariavel(dataInicial,estacionamento));
-            }
+        Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
+        estacionamento.setValorHora(this.valorHora);
+        estacionamento.setTipoTempo(tipoTempo);
+        estacionamento.setStatus(StatusEstacionamento.ABERTO);
 
-            if (periodos.isEmpty())
-                throw new IllegalArgumentException("Período não informado");
-
-            estacionamento.setPeriodos(periodos);
-            estacionamento.setCondutor(condutor);
-            estacionamento.setVeiculo(veiculo);
-
-            var retorno =  this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
-            return ResponseEntity.status(HttpStatus.CREATED).body(retorno);
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        List<Periodo> periodos;
+        if (TipoTempo.FIXO == tipoTempo){
+            periodos = this.adicionarPeriodoFixo(estacionamento);
+            estacionamento.setValorTotal(this.calcularValorTotalFixo(estacionamentoDTO));
+        } else {
+            LocalDateTime dataInicial = LocalDateTime.now();
+            periodos = new ArrayList<>();
+            periodos.add(this.periodoUtilService.adicionaPeriodoVariavel(dataInicial,estacionamento));
         }
+
+        if (periodos.isEmpty())
+            throw new IllegalArgumentException("Período não informado");
+
+        estacionamento.setPeriodos(periodos);
+        estacionamento.setCondutor(condutor);
+        estacionamento.setVeiculo(veiculo);
+
+        return this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
     }
 
     @Override
-    public ResponseEntity<?> condutorInformaResposta(UUID id){
-        try{
-            Estacionamento estacionamento = this.estacionamentoRepository.findById(id)
-                                                .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") );
-            estacionamento.setStatus(StatusEstacionamento.ENCERRADO);
-            estacionamento.setValorTotal(this.calcularValorTotalVariavel(estacionamento));
+    public EstacionamentoDTO  condutorInformaResposta(UUID id){
 
-            this.encerraUltimoPeriodo(estacionamento.getPeriodos());
-            estacionamento = this.estacionamentoRepository.save(estacionamento);
+        Estacionamento estacionamento = this.estacionamentoRepository.findById(id)
+                                            .orElseThrow( () -> new IllegalArgumentException("Estacionamento não encontrado") );
+        estacionamento.setStatus(StatusEstacionamento.ENCERRADO);
+        estacionamento.setValorTotal(this.calcularValorTotalVariavel(estacionamento));
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.toEstacionamentoDTO(estacionamento).valorTotal());
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        this.encerraUltimoPeriodo(estacionamento.getPeriodos());
+        estacionamento = this.estacionamentoRepository.save(estacionamento);
+
+        return this.toEstacionamentoDTO(estacionamento);
     }
 
     private void encerraUltimoPeriodo(List<Periodo> periodos){

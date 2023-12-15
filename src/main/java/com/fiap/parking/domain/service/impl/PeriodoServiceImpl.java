@@ -25,23 +25,15 @@ public class PeriodoServiceImpl implements PeriodoService {
     @Autowired
     private PeriodoUtilService periodoUtilService;
     @Override
-    public ResponseEntity<?> save(UUID estacionamento_id) {
-        try{
-            Estacionamento estacionamento = this.estacionamentoRepository.findById(estacionamento_id)
-                    .orElseThrow(() -> new IllegalArgumentException("Estacionamento não existe"));
+    public void save(UUID estacionamento_id) {
 
-            Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
+        Estacionamento estacionamento = this.estacionamentoRepository.findById(estacionamento_id)
+                .orElseThrow(() -> new IllegalArgumentException("Estacionamento não existe"));
 
-            this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
+        Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Periodo salvo com sucesso");
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
+
     }
 
 }

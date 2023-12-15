@@ -8,11 +8,11 @@ import java.util.List;
 
 @Service
 public interface CondutorService {
-    public ResponseEntity<?> findAll();
+    public List<CondutorDTO> findAll();
 
-    public ResponseEntity<?> findByCpf(String cpf);
+    public CondutorDTO findByCpf(String cpf);
 
-    public ResponseEntity<?> save(CondutorDTO condutorDTO);
+    public CondutorDTO  save(CondutorDTO condutorDTO);
 
-    public ResponseEntity<?> savePayment(String cpf, String tipoPagamento);
+    public void savePayment(String cpf, String tipoPagamento);
 }

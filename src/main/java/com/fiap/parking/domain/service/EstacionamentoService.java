@@ -14,13 +14,13 @@ import java.util.UUID;
 @Service
 public interface EstacionamentoService {
 
-    public ResponseEntity<?> findAll();
-    public ResponseEntity<?> findById(UUID id);
-    public ResponseEntity<?> findByStatus(String status);
+    public List<EstacionamentoDTO> findAll();
+    public EstacionamentoDTO  findById(UUID id);
+    public List<EstacionamentoDTO> findByStatus(String status);
 
-    public ResponseEntity<?> findByStatusAndTipoTempo(String status,String tipoTempo);
+    public List<EstacionamentoDTO> findByStatusAndTipoTempo(String status,String tipoTempo);
 
-    public ResponseEntity<?> save(EstacionamentoDTO estacionamentoDTO, TipoTempo tipoTempo);
-    public ResponseEntity<?> condutorInformaResposta(UUID id);
+    public EstacionamentoDTO  save(EstacionamentoDTO estacionamentoDTO, TipoTempo tipoTempo);
+    public EstacionamentoDTO  condutorInformaResposta(UUID id);
 
 }

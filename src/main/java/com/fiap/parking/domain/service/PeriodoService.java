@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Service
 public interface PeriodoService {
-    public ResponseEntity<?> save(UUID estacionamento_id);
+    public void save(UUID estacionamento_id);
 }

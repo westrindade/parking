@@ -25,33 +25,23 @@ public class CondutoServiceImpl implements CondutorService {
     private CondutorRepository condutorRepository;
 
     @Override
-    public ResponseEntity<?> findAll() {
-        try {
-            var condutor = this.condutorRepository.findAll();
+    public List<CondutorDTO> findAll() {
 
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
-                    condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList())
-            );
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        var condutor = this.condutorRepository.findAll();
+
+        return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
+
     }
 
     @Override
-    public ResponseEntity<?> findByCpf(String cpf) {
-        try {
-            var condutor =  this.condutorRepository.findById(cpf)
-                    .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.toCondutorDTO(condutor));
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+    public CondutorDTO findByCpf(String cpf) {
+        var condutor =  this.condutorRepository.findById(cpf)
+                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+        return this.toCondutorDTO(condutor);
     }
 
     @Override
-    public ResponseEntity<?> save(CondutorDTO condutorDTO) {
+    public CondutorDTO  save(CondutorDTO condutorDTO) {
         final Condutor condutor = toCondutor(condutorDTO);
 //        condutor.setTesteVeiculo(condutor.getVeiculos());
 
@@ -62,41 +52,23 @@ public class CondutoServiceImpl implements CondutorService {
         }
         condutor.setVeiculos(veiculos);
 
-        try{
-            var retorno = this.condutorRepository.saveAndFlush(condutor);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(toCondutorDTO(retorno));
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
+        return toCondutorDTO(this.condutorRepository.save(condutor));
     }
 
     @Override
-    public ResponseEntity<?> savePayment(String cpf, String tipoPagamento) {
+    public void savePayment(String cpf, String tipoPagamento) {
 
-        try {
-
-            String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
-            if (Arrays.stream(TipoPagamento.values())
-                    .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
-                throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
-            }
-            var condutor =  this.condutorRepository.findById(cpf)
-                    .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
-            //Condutor condutor = toCondutor(this.findByCpf(cpf) );
-            condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
-
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Tipo de Pagamento incluido ao condutor");
-
-        } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
+        if (Arrays.stream(TipoPagamento.values())
+                .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
+            throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
         }
+        var condutor =  this.condutorRepository.findById(cpf)
+                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+
+        condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
+        this.condutorRepository.save(condutor);
+
     }
 
     private CondutorDTO toCondutorDTO(Condutor condutor) {

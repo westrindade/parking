@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface VeiculoService {
-    public ResponseEntity<?> findByCondutorCpf(String cpf);
+    public List<VeiculoDTO> findByCondutorCpf(String cpf);
 
-    public ResponseEntity<?> findById(String placa);
+    public VeiculoDTO  findById(String placa);
 }

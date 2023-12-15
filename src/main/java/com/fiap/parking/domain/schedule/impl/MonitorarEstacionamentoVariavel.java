@@ -24,7 +24,7 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
 
     @Autowired
     private PeriodoRepository periodoRepository;
-    private final long SEGUNDO = 50000;
+    private final long SEGUNDO = 1000 * 60 * 30; //30minutos
     private final int AGUARDA_RESPOSTA_USUARIO_MINUTE = 6;
     private final int NOTIFICACAO_TEMPO_INICIAL = -1;
     private final int NOTIFICACAO_TEMPO_FINAL = 5;
