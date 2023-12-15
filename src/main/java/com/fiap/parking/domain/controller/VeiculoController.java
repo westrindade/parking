@@ -28,7 +28,7 @@ public class VeiculoController {
 
     @ApiOperation(value = "Retorna uma lista de veiculos com o condutor informado")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorna a lista de veiculos com o condutor informado",
+            @ApiResponse(responseCode = "201", description = "Retorna a lista de veiculos com o condutor informado",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = CondutorDTO.class)))),
             @ApiResponse(responseCode = "404", description = "Condutor não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
@@ -50,7 +50,7 @@ public class VeiculoController {
 
     @ApiOperation(value = "Retorna condutor dono do veiculo")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorna condutor dono do veiculo",
+            @ApiResponse(responseCode = "201", description = "Retorna condutor dono do veiculo",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = VeiculoDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Veiculo não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),

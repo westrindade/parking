@@ -29,7 +29,7 @@ public class CondutorController {
 
     @ApiOperation(value = "Retorna uma lista de condutores")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorna a lista de condutores",
+            @ApiResponse(responseCode = "201", description = "Retorna a lista de condutores",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = CondutorDTO.class)))),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
@@ -48,7 +48,7 @@ public class CondutorController {
 
     @ApiOperation(value = "Retorna um condutor pelo cpf informado")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Retorna a lista de condutores",
+            @ApiResponse(responseCode = "201", description = "Retorna a lista de condutores",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Condutor não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
