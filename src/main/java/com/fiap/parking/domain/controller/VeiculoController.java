@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
+import com.fiap.parking.domain.dto.VeiculoDTO;
 import com.fiap.parking.domain.service.VeiculoService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -50,7 +51,7 @@ public class VeiculoController {
     @ApiOperation(value = "Retorna condutor dono do veiculo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retorna condutor dono do veiculo",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = VeiculoDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Veiculo não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
