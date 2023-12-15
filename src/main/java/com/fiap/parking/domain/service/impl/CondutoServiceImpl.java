@@ -52,7 +52,8 @@ public class CondutoServiceImpl implements CondutorService {
 
     @Override
     public ResponseEntity<?> save(CondutorDTO condutorDTO) {
-        Condutor condutor = toCondutor(condutorDTO);
+        final Condutor condutor = toCondutor(condutorDTO);
+//        condutor.setTesteVeiculo(condutor.getVeiculos());
 
         List<Veiculo> veiculos = new ArrayList<>();
         for (Veiculo veiculo : condutorDTO.veiculos()) {
@@ -62,7 +63,9 @@ public class CondutoServiceImpl implements CondutorService {
         condutor.setVeiculos(veiculos);
 
         try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(toCondutorDTO(this.condutorRepository.save(condutor)));
+            var retorno = this.condutorRepository.saveAndFlush(condutor);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(toCondutorDTO(retorno));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
@@ -126,7 +129,8 @@ public class CondutoServiceImpl implements CondutorService {
                 condutorDTO.bairro(),
                 condutorDTO.cidade(),
                 condutorDTO.uf(),
-                condutorDTO.cep()
+                condutorDTO.cep(),
+                condutorDTO.veiculos()
         );
     }
 }

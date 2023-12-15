@@ -111,11 +111,29 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
             var condutor =  this.condutorRepository.findById(estacionamentoDTO.condutor())
                     .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
 
-            TipoTempo tempoEnum = TipoTempo.valueOf(tipoTempo.toString().toUpperCase());
+            Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
+            estacionamento.setValorHora(this.valorHora);
+            estacionamento.setTipoTempo(tipoTempo);
+            estacionamento.setStatus(StatusEstacionamento.ABERTO);
 
-            var retorno = tempoEnum == TipoTempo.FIXO ?
-                                                        this.saveFixo(condutor,veiculo,estacionamentoDTO) :
-                                                        this.saveVariavel(condutor,veiculo,estacionamentoDTO);
+            List<Periodo> periodos;
+            if (TipoTempo.FIXO == tipoTempo){
+                periodos = this.saveNewPeriodoFixo(estacionamentoDTO,estacionamento);
+                estacionamento.setValorTotal(this.calcularValorTotalFixo(estacionamentoDTO));
+            } else {
+                LocalDateTime dataInicial = LocalDateTime.now();
+                periodos = new ArrayList<>();
+                periodos.add(this.periodoUtilService.addHoraPeriodo(dataInicial,estacionamento));
+            }
+
+            if (periodos.isEmpty())
+                throw new IllegalArgumentException("Período não informado");
+
+            estacionamento.setPeriodos(periodos);
+            estacionamento.setCondutor(condutor);
+            estacionamento.setVeiculo(veiculo);
+
+            var retorno =  this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
             return ResponseEntity.status(HttpStatus.CREATED).body(retorno);
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -153,42 +171,6 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
         this.periodoRepository.save(ultimoPeriodo);
-    }
-    private EstacionamentoDTO saveFixo(Condutor condutor, Veiculo veiculo, EstacionamentoDTO estacionamentoDTO) {
-        Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
-        estacionamento.setValorHora(this.valorHora);
-        estacionamento.setTipoTempo(TipoTempo.FIXO);
-        estacionamento.setStatus(StatusEstacionamento.ABERTO);
-
-        List<Periodo> periodos = this.saveNewPeriodoFixo(estacionamentoDTO,estacionamento);
-        if (periodos.isEmpty()) {
-            throw new IllegalArgumentException("Período não informado");
-        }
-        BigDecimal valorTotal = this.calcularValorTotalFixo(estacionamentoDTO);
-
-        estacionamento.setValorTotal(valorTotal);
-        estacionamento.setPeriodos(periodos);
-        estacionamento.setCondutor(condutor);
-        estacionamento.setVeiculo(veiculo);
-
-        return this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
-    }
-
-    private EstacionamentoDTO saveVariavel(Condutor condutor, Veiculo veiculo, EstacionamentoDTO estacionamentoDTO) {
-        Estacionamento estacionamento = toEstacionamento(estacionamentoDTO);
-        estacionamento.setValorHora(this.valorHora);
-        estacionamento.setTipoTempo(TipoTempo.VARIAVEL);
-        estacionamento.setStatus(StatusEstacionamento.ABERTO);
-
-        LocalDateTime dataInicial = LocalDateTime.now();
-        List<Periodo> periodos = new ArrayList<>();
-        periodos.add(this.periodoUtilService.addHoraPeriodo(dataInicial,estacionamento));
-
-        estacionamento.setPeriodos(periodos);
-        estacionamento.setCondutor(condutor);
-        estacionamento.setVeiculo(veiculo);
-
-        return this.toEstacionamentoDTO(this.estacionamentoRepository.save(estacionamento));
     }
 
     private BigDecimal calcularValorTotalFixo(EstacionamentoDTO estacionamentoDTO){

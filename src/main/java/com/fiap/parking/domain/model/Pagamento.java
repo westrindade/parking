@@ -24,7 +24,6 @@ public class Pagamento {
     @Column(name = "dt_hr")
     LocalDateTime dataHora;
 
-    @NotBlank(message = "O tipo de pagamento precisa ser informado")
     @Column(name = "tp_pagamento", nullable = false)
     private TipoPagamento tipoPagamento;
 

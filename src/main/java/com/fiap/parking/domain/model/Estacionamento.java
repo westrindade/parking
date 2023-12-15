@@ -38,7 +38,6 @@ public class Estacionamento {
     @JoinColumn(name = "veiculo_placa",nullable = false)
     private Veiculo veiculo;
 
-    @NotNull(message = "O tipo de tempo precisa ser informado")
     @Enumerated(EnumType.STRING)
     @Column(name = "tp_tempo", nullable = false)
     private TipoTempo tipoTempo;

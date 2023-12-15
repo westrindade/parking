@@ -3,6 +3,7 @@ package com.fiap.parking.domain.dto;
 import com.fiap.parking.domain.model.Estacionamento;
 import com.fiap.parking.domain.model.StatusPagamento;
 import com.fiap.parking.domain.model.TipoPagamento;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ public record PagamentoDTO(
         UUID id,
         StatusPagamento status,
         LocalDateTime dataHora,
+        @NotBlank(message = "O tipo de pagamento precisa ser informado")
         TipoPagamento tipoPagamento,
         BigDecimal valor,
         Estacionamento estacionamento

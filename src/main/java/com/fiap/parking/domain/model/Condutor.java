@@ -3,10 +3,12 @@ package com.fiap.parking.domain.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,11 +20,9 @@ public class Condutor {
     @Column(name = "cpf", unique = true)
     private String cpf;
 
-    @NotBlank(message = "O nome precisa ser informado")
     @Column(name = "nome")
     private String nome;
 
-    @NotNull(message = "O celular precisa ser informado")
     @Column(name = "celular")
     private String celular;
 
@@ -48,13 +48,19 @@ public class Condutor {
     private TipoPagamento tipoPagamentoPadrao;
 
     @OneToMany(mappedBy = "condutor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Veiculo> veiculos;
+    private List<Veiculo> veiculos = new ArrayList<>();
 
+    //private transient List<Veiculo> testeVeiculo;
+    
     public Condutor(){}
+    
     public Condutor(String cpf){}
 
+
     public Condutor(String cpf, String nome, String celular, LocalDate dataNascimento, String tipoLogradouro,
-                    String logradouro, String nroLogradouro, String bairro, String cidade, String uf, String cep
+                    String logradouro, String nroLogradouro, String bairro, String cidade, String uf, String cep,
+                    @Size(min = 1)
+                    List<Veiculo> veiculos
                     ) {
         this.cpf = cpf;
         this.nome = nome;
@@ -67,7 +73,17 @@ public class Condutor {
         this.cidade = cidade;
         this.uf = uf;
         this.cep = cep;
+        this.veiculos = veiculos;
     }
+
+//    @PrePersist
+//    public void persist(){
+//    	if (veiculos == null) return;
+//
+//        for (Veiculo veiculo : veiculos) {
+//            veiculo.setCondutor(this);
+//        }
+//    }
 
     @Override
     public String toString() {
@@ -79,4 +95,8 @@ public class Condutor {
                 ",TipoPagamentoPadrao=" + this.tipoPagamentoPadrao +
                 '}';
     }
+
+//	public void setTesteVeiculo(List<Veiculo> veiculos2) {
+//		this.testeVeiculo = veiculos2;
+//	}
 }

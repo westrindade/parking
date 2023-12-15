@@ -23,7 +23,7 @@ public class MonitorareEstacionamentoFixo implements MonitoramentoEstacionamento
 
     @Autowired
     private PeriodoRepository periodoRepository;
-    private final long SEGUNDO = 5000;
+    private final long SEGUNDO = 50000;
     private final int NOTIFICACAO_TEMPO = -5;
     private final int ENCERRA_ESTACIONAMENTO = 0;
 
