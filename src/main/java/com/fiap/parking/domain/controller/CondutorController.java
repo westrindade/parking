@@ -3,6 +3,7 @@ package com.fiap.parking.domain.controller;
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.CondutorService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -18,9 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+@Tag(name = "Condutor",description = "Condutor que utilizara o estacionamento")
 @RestController
 @RequestMapping("/condutores")
 public class CondutorController {
@@ -51,6 +50,8 @@ public class CondutorController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Retorna a lista de condutores",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Condutor não encontrado",
+                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
     })
