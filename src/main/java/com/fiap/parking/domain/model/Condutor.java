@@ -76,14 +76,14 @@ public class Condutor {
         this.veiculos = veiculos;
     }
 
-//    @PrePersist
-//    public void persist(){
-//    	if (veiculos == null) return;
-//
-//        for (Veiculo veiculo : veiculos) {
-//            veiculo.setCondutor(this);
-//        }
-//    }
+    @PrePersist
+    public void persist(){
+    	if (veiculos == null) return;
+
+        for (Veiculo veiculo : veiculos) {
+            veiculo.setCondutor(this);
+        }
+    }
 
     @Override
     public String toString() {

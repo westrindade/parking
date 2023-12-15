@@ -76,7 +76,7 @@ public class MonitorarEstacionamentoVariavel implements MonitoramentoEstacioname
         if (resultado){
             ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.RENOVADA);
             this.periodoRepository.save(ultimoPeriodo);
-            this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(ultimoPeriodo.getDataHoraFinal(),estacionamento));
+            this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.getDataHoraFinal(),estacionamento));
             //System.out.println("Estacionamento " + estacionamento.getId() + " acrescido mais tempo");
         }
     }

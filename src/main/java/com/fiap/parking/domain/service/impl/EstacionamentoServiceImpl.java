@@ -118,12 +118,12 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
 
             List<Periodo> periodos;
             if (TipoTempo.FIXO == tipoTempo){
-                periodos = this.saveNewPeriodoFixo(estacionamentoDTO,estacionamento);
+                periodos = this.adicionarPeriodoFixo(estacionamento);
                 estacionamento.setValorTotal(this.calcularValorTotalFixo(estacionamentoDTO));
             } else {
                 LocalDateTime dataInicial = LocalDateTime.now();
                 periodos = new ArrayList<>();
-                periodos.add(this.periodoUtilService.addHoraPeriodo(dataInicial,estacionamento));
+                periodos.add(this.periodoUtilService.adicionaPeriodoVariavel(dataInicial,estacionamento));
             }
 
             if (periodos.isEmpty())
@@ -188,9 +188,9 @@ public class EstacionamentoServiceImpl implements EstacionamentoService {
         return this.valorHora.multiply(new BigDecimal(totalPeriodos));
     }
 
-    private List<Periodo> saveNewPeriodoFixo(EstacionamentoDTO estacionamentoDTO,Estacionamento estacionamento){
+    private List<Periodo> adicionarPeriodoFixo(Estacionamento estacionamento){
         List<Periodo> periodos = new ArrayList<>();
-        for (Periodo periodo : estacionamentoDTO.periodos()) {
+        for (Periodo periodo : estacionamento.getPeriodos()) {
             periodo.setEstacionamento(estacionamento);
 
             AcaoPeriodo acaoPeriodo = null;

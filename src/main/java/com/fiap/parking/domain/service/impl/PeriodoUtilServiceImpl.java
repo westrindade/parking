@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class PeriodoUtilServiceImpl implements PeriodoUtilService {
     @Override
-    public Periodo addHoraPeriodo(LocalDateTime dataUltimoPeriodo, Estacionamento estacionamento) {
+    public Periodo adicionaPeriodoVariavel(LocalDateTime dataUltimoPeriodo, Estacionamento estacionamento) {
         LocalDateTime dataInicial = dataUltimoPeriodo.plusSeconds(1);
         Periodo periodo = new Periodo();
         periodo.setEstacionamento(estacionamento);

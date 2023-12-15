@@ -32,7 +32,7 @@ public class PeriodoServiceImpl implements PeriodoService {
 
             Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(estacionamento.getPeriodos());
 
-            this.periodoRepository.save(this.periodoUtilService.addHoraPeriodo(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
+            this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.get().getDataHoraFinal(),estacionamento));
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Periodo salvo com sucesso");
         } catch (IllegalArgumentException ex){

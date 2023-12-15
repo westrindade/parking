@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public interface PeriodoUtilService {
 
-    public Periodo addHoraPeriodo(LocalDateTime dataInicial, Estacionamento estacionamento);
+    Periodo adicionaPeriodoVariavel(LocalDateTime dataUltimoPeriodo, Estacionamento estacionamento);
     public Optional<Periodo> ordenarDecrescentePegarPrimeiro(List<Periodo> listaDePeriodos);
     public long calcularIntervaloHoras(LocalDateTime dataInicio, LocalDateTime dataFim);
     public long calcularIntervaloMinutos(LocalDateTime dataInicio, LocalDateTime dataFim);
