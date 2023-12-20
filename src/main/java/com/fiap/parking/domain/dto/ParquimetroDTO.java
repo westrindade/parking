@@ -21,5 +21,4 @@ public record ParquimetroDTO(
         BigDecimal valorTotal,
         StatusParquimetro status,
         List<Periodo> periodos
-) {
-}
+) {}

@@ -65,9 +65,8 @@ public class ParquimetroServiceImpl implements ParquimetroService {
 
     @Override
     public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
-
         var veiculo = this.veiculoRepository.findById(parquimetroDTO.veiculo())
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
+                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );
         var condutor =  this.condutorRepository.findById(parquimetroDTO.condutor())
                 .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
 
@@ -98,7 +97,6 @@ public class ParquimetroServiceImpl implements ParquimetroService {
 
     @Override
     public ParquimetroDTO condutorInformaResposta(UUID id){
-
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
                                             .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") );
         parquimetro.setStatus(StatusParquimetro.ENCERRADO);

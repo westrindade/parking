@@ -26,4 +26,4 @@ public record CondutorDTO (
         TipoPagamento tipoPagamentoPadrao,
         @Size(message = "Nao pode estar vazia", min = 1)
         List<Veiculo> veiculos
-) { }
+) {}

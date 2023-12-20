@@ -15,20 +15,20 @@ import java.util.*;
 public class PeriodoServiceImpl implements PeriodoService {
     @Autowired
     private PeriodoRepository periodoRepository;
+
     @Autowired
     private ParquimetroRepository parquimetroRepository;
+
     @Autowired
     private PeriodoUtilService periodoUtilService;
+
     @Override
     public void save(UUID parquimetro_id) {
-
         Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
                 .orElseThrow(() -> new IllegalArgumentException("Parquimetro não existe"));
 
         Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos());
 
         this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.get().getDataHoraFinal(),parquimetro));
-
     }
-
 }

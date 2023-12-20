@@ -7,10 +7,6 @@ import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.CondutorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,11 +22,9 @@ public class CondutoServiceImpl implements CondutorService {
 
     @Override
     public List<CondutorDTO> findAll() {
-
         var condutor = this.condutorRepository.findAll();
 
         return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
-
     }
 
     @Override
@@ -43,7 +37,6 @@ public class CondutoServiceImpl implements CondutorService {
     @Override
     public CondutorDTO  save(CondutorDTO condutorDTO) {
         final Condutor condutor = toCondutor(condutorDTO);
-//        condutor.setTesteVeiculo(condutor.getVeiculos());
 
         List<Veiculo> veiculos = new ArrayList<>();
         for (Veiculo veiculo : condutorDTO.veiculos()) {
@@ -57,7 +50,6 @@ public class CondutoServiceImpl implements CondutorService {
 
     @Override
     public void savePayment(String cpf, String tipoPagamento) {
-
         String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
         if (Arrays.stream(TipoPagamento.values())
                 .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
@@ -68,7 +60,6 @@ public class CondutoServiceImpl implements CondutorService {
 
         condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
         this.condutorRepository.save(condutor);
-
     }
 
     private CondutorDTO toCondutorDTO(Condutor condutor) {

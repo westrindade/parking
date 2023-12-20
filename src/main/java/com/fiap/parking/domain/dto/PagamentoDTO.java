@@ -4,8 +4,6 @@ import com.fiap.parking.domain.model.Parquimetro;
 import com.fiap.parking.domain.model.StatusPagamento;
 import com.fiap.parking.domain.model.TipoPagamento;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,5 +16,4 @@ public record PagamentoDTO(
         TipoPagamento tipoPagamento,
         BigDecimal valor,
         Parquimetro parquimetro
-) {
-}
+) {}

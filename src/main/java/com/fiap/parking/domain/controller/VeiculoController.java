@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +39,7 @@ public class VeiculoController {
             @Parameter(in = ParameterIn.PATH, description = "CPF do condutor")
             @PathVariable String cpf){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.veiculoService.findByCondutorCpf(cpf));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.veiculoService.findByCondutorCpf(cpf));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
@@ -62,7 +61,7 @@ public class VeiculoController {
             @Parameter(in = ParameterIn.PATH, description = "Placa do veiculo")
             @PathVariable String placa){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.veiculoService.findById(placa));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.veiculoService.findById(placa));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){

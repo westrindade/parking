@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +38,7 @@ public class ParquimetroController {
     @GetMapping
     public ResponseEntity<?> ListarTodos(){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
-                    this.parquimetroService.findAll()
-            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.findAll());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -61,7 +58,7 @@ public class ParquimetroController {
             @Parameter(in = ParameterIn.PATH, description = "Id do parquimetro")
             @PathVariable UUID id){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.parquimetroService.findById(id));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.findById(id));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
@@ -83,7 +80,7 @@ public class ParquimetroController {
             @Parameter(in = ParameterIn.PATH, description = "Status do parquimetro")
             @PathVariable String status){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
+            return ResponseEntity.status(HttpStatus.CREATED).body(
                     this.parquimetroService.findByStatus(status)
             );
         } catch (IllegalArgumentException ex){
@@ -109,7 +106,7 @@ public class ParquimetroController {
             @Parameter(in = ParameterIn.PATH, description = "Tipo de parquimetro")
             @PathVariable(value = "tipo", required = true) String tipoParquimetro){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
+            return ResponseEntity.status(HttpStatus.CREATED).body(
                     this.parquimetroService.findByStatusAndTipoParquimetro(status,tipoParquimetro)
             );
         } catch (IllegalArgumentException ex){
@@ -162,8 +159,7 @@ public class ParquimetroController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do parquimetro")
             @RequestBody ParquimetroDTO oarParquimetroDTO){
         try {
-            var retorno =  this.parquimetroService.save(oarParquimetroDTO, TipoParquimetro.VARIAVEL);
-            return ResponseEntity.status(HttpStatus.CREATED).body(retorno);
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.save(oarParquimetroDTO, TipoParquimetro.VARIAVEL));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
@@ -188,7 +184,7 @@ public class ParquimetroController {
             @PathVariable UUID id){
         try{
             ParquimetroDTO parquimetroDTO = this.parquimetroService.condutorInformaResposta(id);
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(parquimetroDTO.valorTotal());
+            return ResponseEntity.status(HttpStatus.CREATED).body(parquimetroDTO.valorTotal());
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {

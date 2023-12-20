@@ -12,9 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
@@ -37,14 +37,13 @@ public class CondutorController {
     @GetMapping
     public ResponseEntity<?> ListarTodos(){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(
-                    this.condutorService.findAll()
-            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.findAll());
         } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage());
         }
     }
-
 
     @ApiOperation(value = "Retorna um condutor pelo cpf informado")
     @ApiResponses(value = {
@@ -60,7 +59,7 @@ public class CondutorController {
             @Parameter(in = ParameterIn.PATH, description = "CPF do condutor")
             @PathVariable String cpf){
         try {
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(this.condutorService.findByCpf(cpf));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.findByCpf(cpf));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
@@ -84,7 +83,6 @@ public class CondutorController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do Condutor incluindo veiculo(s)")
             @Valid @RequestBody CondutorDTO condutorDTO){
         try{
-
             return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.save(condutorDTO));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -112,8 +110,7 @@ public class CondutorController {
 
         try {
             this.condutorService.savePayment(cpf,tipoPagamento);
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Tipo de Pagamento incluido ao condutor");
-
+            return ResponseEntity.status(HttpStatus.CREATED).body("Tipo de Pagamento incluido ao condutor");
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {

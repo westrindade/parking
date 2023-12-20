@@ -7,5 +7,4 @@ public record PeriodoDTO(
         UUID parquimetro,
         LocalDateTime dataHoraInicial,
         LocalDateTime dataHoraFinal
-) {
-}
+) {}

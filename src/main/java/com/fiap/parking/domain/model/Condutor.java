@@ -94,7 +94,4 @@ public class Condutor {
                 '}';
     }
 
-//	public void setTesteVeiculo(List<Veiculo> veiculos2) {
-//		this.testeVeiculo = veiculos2;
-//	}
 }

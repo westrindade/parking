@@ -39,7 +39,6 @@ public class PagamentoServiceImpl implements PagamentoService {
         pagamento = this.pagamentoRepository.save(pagamento);
 
         return this.toPagamentoDTO(pagamento);
-
     }
 
     private void tipoParquimetroVariavel(Parquimetro parquimetro){
