@@ -17,21 +17,15 @@ public class VeiculoService {
 
     public List<VeiculoDTO> findByCondutorCpf(String cpf) {
         var veiculo = this.veiculoRepository.findByCondutorCpf(cpf);
-        return veiculo.stream().map(this::toVeiculoDTO).collect(Collectors.toList());
+        return veiculo.stream().map(Veiculo::toDTO).collect(Collectors.toList());
     }
 
     public VeiculoDTO findById(String placa) {
         var veiculo = this.veiculoRepository.findById(placa)
                 .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );
 
-        return this.toVeiculoDTO(veiculo);
+        return veiculo.toDTO();
     }
 
-    private VeiculoDTO toVeiculoDTO(Veiculo veiculo){
-        return new VeiculoDTO(
-                veiculo.getPlaca(),
-                veiculo.getModelo(),
-                veiculo.getCor()
-        );
-    }
+    
 }

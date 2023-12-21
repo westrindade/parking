@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.parking.domain.dto.ParquimetroDTO;
+
 @Data
 @Entity
 @Table(name = "tb_parquimetro")
@@ -57,4 +59,19 @@ public class Parquimetro {
 
     @OneToMany(mappedBy = "parquimetro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Periodo> periodos;
+
+    public ParquimetroDTO toDTO() {
+        return new ParquimetroDTO(
+            this.getId(),
+            this.getTipoParquimetro(),
+            this.getVeiculo().getPlaca(),
+            this.getCondutor().getCpf(),
+            this.getLongitude(),
+            this.getLatitude(),
+            this.getValorHora(),
+            this.getValorTotal(),
+            this.getStatus(),
+            this.getPeriodos()
+        );
+    }
 }

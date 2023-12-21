@@ -1,5 +1,6 @@
 package com.fiap.parking.domain.dto;
 
+import com.fiap.parking.domain.model.Parquimetro;
 import com.fiap.parking.domain.model.Periodo;
 import com.fiap.parking.domain.model.StatusParquimetro;
 import com.fiap.parking.domain.model.TipoParquimetro;
@@ -21,4 +22,16 @@ public record ParquimetroDTO(
         BigDecimal valorTotal,
         StatusParquimetro status,
         List<Periodo> periodos
-) {}
+) {
+
+        public Parquimetro toParquimetro() {
+                return new Parquimetro(
+                        this.tipoParquimetro(),
+                        this.latitude(),
+                        this.longitude(),
+                        this.valorHora(),
+                        this.valorTotal(),
+                        this.status()
+                );
+        }
+}

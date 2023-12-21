@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fiap.parking.domain.dto.CondutorDTO;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +94,24 @@ public class Condutor {
                 ", veiculos=" + (this.veiculos != null ? this.veiculos.size() : "null") +
                 ",TipoPagamentoPadrao=" + this.tipoPagamentoPadrao +
                 '}';
+    }
+
+    public CondutorDTO toDTO() {
+        return new CondutorDTO(
+                this.getCpf(),
+                this.getNome(),
+                this.getCelular(),
+                this.getDataNascimento(),
+                this.getTipoLogradouro(),
+                this.getLogradouro(),
+                this.getNroLogradouro(),
+                this.getBairro(),
+                this.getCidade(),
+                this.getUf(),
+                this.getCep(),
+                this.getTipoPagamentoPadrao(),
+                this.getVeiculos()
+        );
     }
 
 }

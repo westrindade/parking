@@ -1,6 +1,8 @@
 package com.fiap.parking.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fiap.parking.domain.dto.VeiculoDTO;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,4 +25,12 @@ public class Veiculo {
     @ManyToOne
     @JoinColumn(name = "condutor_cpf", referencedColumnName = "cpf", nullable = false)
     private Condutor condutor;
+
+    public VeiculoDTO toDTO(){
+        return new VeiculoDTO(
+                this.getPlaca(),
+                this.getModelo(),
+                this.getCor()
+        );
+    }
 }

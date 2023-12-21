@@ -37,23 +37,12 @@ public class PagamentoService {
 
         pagamento = this.pagamentoRepository.save(pagamento);
 
-        return this.toPagamentoDTO(pagamento);
+        return pagamento.toDTO();
     }
 
     private void tipoParquimetroVariavel(Parquimetro parquimetro){
         if (parquimetro.getCondutor().getTipoPagamentoPadrao() == TipoPagamento.PIX){
             throw new IllegalStateException("PIX não é aceito em parquimetro VARIAVEL");
         }
-    }
-
-    private PagamentoDTO toPagamentoDTO(Pagamento pagamento) {
-        return new PagamentoDTO(
-                pagamento.getId(),
-                pagamento.getStatus(),
-                pagamento.getDataHora(),
-                pagamento.getTipoPagamento(),
-                pagamento.getValor(),
-                pagamento.getParquimetro()
-        );
     }
 }

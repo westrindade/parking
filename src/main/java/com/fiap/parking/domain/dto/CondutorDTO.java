@@ -1,5 +1,6 @@
 package com.fiap.parking.domain.dto;
 
+import com.fiap.parking.domain.model.Condutor;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.model.Veiculo;
 import jakarta.validation.constraints.NotBlank;
@@ -26,4 +27,21 @@ public record CondutorDTO (
         TipoPagamento tipoPagamentoPadrao,
         @Size(message = "Nao pode estar vazia", min = 1)
         List<Veiculo> veiculos
-) {}
+) {
+        public Condutor toCondutor() {
+                return new Condutor(
+                        this.cpf(),
+                        this.nome(),
+                        this.celular(),
+                        this.dataNascimento(),
+                        this.tipoLogradouro(),
+                        this.logradouro(),
+                        this.nroLogradouro(),
+                        this.bairro(),
+                        this.cidade(),
+                        this.uf(),
+                        this.cep(),
+                        this.veiculos()
+                );
+        }
+}

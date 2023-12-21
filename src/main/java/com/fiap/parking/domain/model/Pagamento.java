@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fiap.parking.domain.dto.PagamentoDTO;
+
 @Data
 @Entity
 @Table(name = "tb_pagamento")
@@ -31,4 +33,15 @@ public class Pagamento {
     @ManyToOne
     @JoinColumn(name = "cd_parquimetro", referencedColumnName = "cd_parquimetro")
     private Parquimetro parquimetro;
+
+    public PagamentoDTO toDTO() {
+        return new PagamentoDTO(
+                this.getId(),
+                this.getStatus(),
+                this.getDataHora(),
+                this.getTipoPagamento(),
+                this.getValor(),
+                this.getParquimetro()
+        );
+    }
 }

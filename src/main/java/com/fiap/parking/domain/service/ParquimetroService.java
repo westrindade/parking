@@ -36,19 +36,19 @@ public class ParquimetroService {
 
     public List<ParquimetroDTO> findAll() {
         var parquimetros = this.parquimetroRepository.findAll();
-        return parquimetros.stream().map(this::toParquimetroDTO).collect(Collectors.toList());
+        return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 
     public ParquimetroDTO findById(UUID id) {
-        var parquimetros = this.toParquimetroDTO(this.parquimetroRepository.findById(id)
-                .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") ) );
+        var parquimetros = this.parquimetroRepository.findById(id)
+                .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") ).toDTO();
         return parquimetros;
     }
 
     public List<ParquimetroDTO> findByStatus(String status) {
         StatusParquimetro statusCast = this.converterStringParaStatus(status);
         var parquimetros = this.parquimetroRepository.findByStatus(statusCast);
-        return parquimetros.stream().map(this::toParquimetroDTO).collect(Collectors.toList());
+        return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 
     public List<ParquimetroDTO> findByStatusAndTipoParquimetro(String status, String tipoParquimetro) {
@@ -56,7 +56,7 @@ public class ParquimetroService {
         TipoParquimetro tipoParquimetroCast = this.converterStringParaTipoParquimetro(tipoParquimetro);
 
         var parquimetros = this.parquimetroRepository.findByStatusAndTipoParquimetro(statusCast, tipoParquimetroCast);
-        return parquimetros.stream().map(this::toParquimetroDTO).collect(Collectors.toList());
+        return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 
     public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
@@ -65,7 +65,7 @@ public class ParquimetroService {
         var condutor =  this.condutorRepository.findById(parquimetroDTO.condutor())
                 .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
 
-        Parquimetro parquimetro = toParquimetro(parquimetroDTO);
+        Parquimetro parquimetro = parquimetroDTO.toParquimetro();
         parquimetro.setValorHora(this.valorHora);
         parquimetro.setTipoParquimetro(tipoParquimetro);
         parquimetro.setStatus(StatusParquimetro.ABERTO);
@@ -87,7 +87,7 @@ public class ParquimetroService {
         parquimetro.setCondutor(condutor);
         parquimetro.setVeiculo(veiculo);
 
-        return this.toParquimetroDTO(this.parquimetroRepository.save(parquimetro));
+        return this.parquimetroRepository.save(parquimetro).toDTO();
     }
 
     public ParquimetroDTO condutorInformaResposta(UUID id){
@@ -99,7 +99,7 @@ public class ParquimetroService {
         this.encerraUltimoPeriodo(parquimetro.getPeriodos());
         parquimetro = this.parquimetroRepository.save(parquimetro);
 
-        return this.toParquimetroDTO(parquimetro);
+        return parquimetro.toDTO();
     }
 
     private void encerraUltimoPeriodo(List<Periodo> periodos){
@@ -138,32 +138,6 @@ public class ParquimetroService {
         }
 
         return periodos;
-    }
-
-    private ParquimetroDTO toParquimetroDTO(Parquimetro parquimetro) {
-        return new ParquimetroDTO(
-                parquimetro.getId(),
-                parquimetro.getTipoParquimetro(),
-                parquimetro.getVeiculo().getPlaca(),
-                parquimetro.getCondutor().getCpf(),
-                parquimetro.getLongitude(),
-                parquimetro.getLatitude(),
-                parquimetro.getValorHora(),
-                parquimetro.getValorTotal(),
-                parquimetro.getStatus(),
-                parquimetro.getPeriodos()
-        );
-    }
-
-    private Parquimetro toParquimetro(ParquimetroDTO parquimetroDTO) {
-        return new Parquimetro(
-                parquimetroDTO.tipoParquimetro(),
-                parquimetroDTO.latitude(),
-                parquimetroDTO.longitude(),
-                parquimetroDTO.valorHora(),
-                parquimetroDTO.valorTotal(),
-                parquimetroDTO.status()
-        );
     }
 
     private StatusParquimetro converterStringParaStatus(String status) {

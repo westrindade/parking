@@ -22,17 +22,17 @@ public class CondutorService {
     public List<CondutorDTO> findAll() {
         var condutor = this.condutorRepository.findAll();
 
-        return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
+        return condutor.stream().map(Condutor::toDTO).collect(Collectors.toList());
     }
 
     public CondutorDTO findByCpf(String cpf) {
         var condutor =  this.condutorRepository.findById(cpf)
                 .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
-        return this.toCondutorDTO(condutor);
+        return condutor.toDTO();
     }
 
-    public CondutorDTO  save(CondutorDTO condutorDTO) {
-        final Condutor condutor = toCondutor(condutorDTO);
+    public CondutorDTO save(CondutorDTO condutorDTO) {
+        final Condutor condutor = condutorDTO.toCondutor();
 
         List<Veiculo> veiculos = new ArrayList<>();
         for (Veiculo veiculo : condutorDTO.veiculos()) {
@@ -41,7 +41,7 @@ public class CondutorService {
         }
         condutor.setVeiculos(veiculos);
 
-        return toCondutorDTO(this.condutorRepository.save(condutor));
+        return this.condutorRepository.save(condutor).toDTO();
     }
 
     public void savePayment(String cpf, String tipoPagamento) {
@@ -55,40 +55,5 @@ public class CondutorService {
 
         condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
         this.condutorRepository.save(condutor);
-    }
-
-    private CondutorDTO toCondutorDTO(Condutor condutor) {
-        return new CondutorDTO(
-                condutor.getCpf(),
-                condutor.getNome(),
-                condutor.getCelular(),
-                condutor.getDataNascimento(),
-                condutor.getTipoLogradouro(),
-                condutor.getLogradouro(),
-                condutor.getNroLogradouro(),
-                condutor.getBairro(),
-                condutor.getCidade(),
-                condutor.getUf(),
-                condutor.getCep(),
-                condutor.getTipoPagamentoPadrao(),
-                condutor.getVeiculos()
-        );
-    }
-
-    private Condutor toCondutor(CondutorDTO condutorDTO) {
-        return new Condutor(
-                condutorDTO.cpf(),
-                condutorDTO.nome(),
-                condutorDTO.celular(),
-                condutorDTO.dataNascimento(),
-                condutorDTO.tipoLogradouro(),
-                condutorDTO.logradouro(),
-                condutorDTO.nroLogradouro(),
-                condutorDTO.bairro(),
-                condutorDTO.cidade(),
-                condutorDTO.uf(),
-                condutorDTO.cep(),
-                condutorDTO.veiculos()
-        );
     }
 }
