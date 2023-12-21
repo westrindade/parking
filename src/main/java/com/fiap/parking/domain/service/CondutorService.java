@@ -1,17 +1,94 @@
 package com.fiap.parking.domain.service;
 
+import com.fiap.parking.domain.model.Condutor;
+import com.fiap.parking.domain.model.TipoPagamento;
+import com.fiap.parking.domain.model.Veiculo;
+import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.dto.CondutorDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public interface CondutorService {
-    public List<CondutorDTO> findAll();
+public class CondutorService {
 
-    public CondutorDTO findByCpf(String cpf);
+    @Autowired
+    private CondutorRepository condutorRepository;
 
-    public CondutorDTO  save(CondutorDTO condutorDTO);
+    public List<CondutorDTO> findAll() {
+        var condutor = this.condutorRepository.findAll();
 
-    public void savePayment(String cpf, String tipoPagamento);
+        return condutor.stream().map(this::toCondutorDTO).collect(Collectors.toList());
+    }
+
+    public CondutorDTO findByCpf(String cpf) {
+        var condutor =  this.condutorRepository.findById(cpf)
+                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+        return this.toCondutorDTO(condutor);
+    }
+
+    public CondutorDTO  save(CondutorDTO condutorDTO) {
+        final Condutor condutor = toCondutor(condutorDTO);
+
+        List<Veiculo> veiculos = new ArrayList<>();
+        for (Veiculo veiculo : condutorDTO.veiculos()) {
+            veiculo.setCondutor(condutor);
+            veiculos.add(veiculo);
+        }
+        condutor.setVeiculos(veiculos);
+
+        return toCondutorDTO(this.condutorRepository.save(condutor));
+    }
+
+    public void savePayment(String cpf, String tipoPagamento) {
+        String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
+        if (Arrays.stream(TipoPagamento.values())
+                .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
+            throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
+        }
+        var condutor =  this.condutorRepository.findById(cpf)
+                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+
+        condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
+        this.condutorRepository.save(condutor);
+    }
+
+    private CondutorDTO toCondutorDTO(Condutor condutor) {
+        return new CondutorDTO(
+                condutor.getCpf(),
+                condutor.getNome(),
+                condutor.getCelular(),
+                condutor.getDataNascimento(),
+                condutor.getTipoLogradouro(),
+                condutor.getLogradouro(),
+                condutor.getNroLogradouro(),
+                condutor.getBairro(),
+                condutor.getCidade(),
+                condutor.getUf(),
+                condutor.getCep(),
+                condutor.getTipoPagamentoPadrao(),
+                condutor.getVeiculos()
+        );
+    }
+
+    private Condutor toCondutor(CondutorDTO condutorDTO) {
+        return new Condutor(
+                condutorDTO.cpf(),
+                condutorDTO.nome(),
+                condutorDTO.celular(),
+                condutorDTO.dataNascimento(),
+                condutorDTO.tipoLogradouro(),
+                condutorDTO.logradouro(),
+                condutorDTO.nroLogradouro(),
+                condutorDTO.bairro(),
+                condutorDTO.cidade(),
+                condutorDTO.uf(),
+                condutorDTO.cep(),
+                condutorDTO.veiculos()
+        );
+    }
 }

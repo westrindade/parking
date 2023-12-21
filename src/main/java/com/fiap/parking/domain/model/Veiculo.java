@@ -2,7 +2,6 @@ package com.fiap.parking.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -24,6 +23,4 @@ public class Veiculo {
     @ManyToOne
     @JoinColumn(name = "condutor_cpf", referencedColumnName = "cpf", nullable = false)
     private Condutor condutor;
-
-
 }
