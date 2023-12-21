@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.service.CondutorService;
 
 import io.swagger.annotations.ApiOperation;
@@ -61,7 +62,7 @@ public class CondutorController {
             @PathVariable String cpf){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.findByCpf(cpf));
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
@@ -112,7 +113,7 @@ public class CondutorController {
         try {
             this.condutorService.savePayment(cpf,tipoPagamento);
             return ResponseEntity.status(HttpStatus.CREATED).body("Tipo de Pagamento incluido ao condutor");
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());

@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.ParquimetroDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.*;
 import com.fiap.parking.domain.service.ParquimetroService;
 import io.swagger.annotations.ApiOperation;
@@ -109,7 +110,7 @@ public class ParquimetroController {
             return ResponseEntity.status(HttpStatus.CREATED).body(
                     this.parquimetroService.findByStatusAndTipoParquimetro(status,tipoParquimetro)
             );
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
@@ -134,7 +135,7 @@ public class ParquimetroController {
         try {
             var retorno =  this.parquimetroService.save(parquimetroDTO, TipoParquimetro.FIXO);
             return ResponseEntity.status(HttpStatus.CREATED).body(retorno);
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
@@ -160,7 +161,7 @@ public class ParquimetroController {
             @RequestBody ParquimetroDTO oarParquimetroDTO){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.save(oarParquimetroDTO, TipoParquimetro.VARIAVEL));
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
@@ -185,7 +186,7 @@ public class ParquimetroController {
         try{
             ParquimetroDTO parquimetroDTO = this.parquimetroService.condutorInformaResposta(id);
             return ResponseEntity.status(HttpStatus.CREATED).body(parquimetroDTO.valorTotal());
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());

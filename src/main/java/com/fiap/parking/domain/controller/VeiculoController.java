@@ -2,6 +2,7 @@ package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.dto.VeiculoDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.service.VeiculoService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -62,7 +63,7 @@ public class VeiculoController {
             @PathVariable String placa){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.veiculoService.findById(placa));
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());

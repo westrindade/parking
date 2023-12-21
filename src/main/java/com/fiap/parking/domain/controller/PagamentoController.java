@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.service.PagamentoService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,7 +47,7 @@ public class PagamentoController {
             @PathVariable UUID parquimetro_id){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(this.pagamentoService.pagamento(parquimetro_id));
-        } catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException | EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
