@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.service;
 
 import com.fiap.parking.domain.dto.ParquimetroDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.*;
 import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.repositories.ParquimetroRepository;
@@ -41,7 +42,7 @@ public class ParquimetroService {
 
     public ParquimetroDTO findById(UUID id) {
         var parquimetros = this.parquimetroRepository.findById(id)
-                .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") ).toDTO();
+                .orElseThrow( () -> new EntidadeNaoEncontrada("Parquimetro não encontrado") ).toDTO();
         return parquimetros;
     }
 
@@ -61,9 +62,9 @@ public class ParquimetroService {
 
     public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
         var veiculo = this.veiculoRepository.findById(parquimetroDTO.veiculo())
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("Veiculo não encontrado") );
         var condutor =  this.condutorRepository.findById(parquimetroDTO.condutor())
-                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado") );
 
         Parquimetro parquimetro = parquimetroDTO.toParquimetro();
         parquimetro.setValorHora(this.valorHora);
@@ -92,7 +93,7 @@ public class ParquimetroService {
 
     public ParquimetroDTO condutorInformaResposta(UUID id){
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
-                                            .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") );
+                                            .orElseThrow( () -> new EntidadeNaoEncontrada("Parquimetro não encontrado") );
         parquimetro.setStatus(StatusParquimetro.ENCERRADO);
         parquimetro.setValorTotal(this.calcularValorTotalVariavel(parquimetro));
 
@@ -104,7 +105,7 @@ public class ParquimetroService {
 
     private void encerraUltimoPeriodo(List<Periodo> periodos){
         Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(periodos)
-                .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
+                .orElseThrow(() -> new EntidadeNaoEncontrada("Periodo não existe"));
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
         this.periodoRepository.save(ultimoPeriodo);

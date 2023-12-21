@@ -5,6 +5,8 @@ import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.model.Veiculo;
 import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.dto.CondutorDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class CondutorService {
 
     public CondutorDTO findByCpf(String cpf) {
         var condutor =  this.condutorRepository.findById(cpf)
-                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado") );
         return condutor.toDTO();
     }
 
@@ -51,7 +53,7 @@ public class CondutorService {
             throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
         }
         var condutor =  this.condutorRepository.findById(cpf)
-                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado") );
 
         condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
         this.condutorRepository.save(condutor);

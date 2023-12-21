@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.service;
 
 import com.fiap.parking.domain.dto.VeiculoDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.Veiculo;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class VeiculoService {
 
     public VeiculoDTO findById(String placa) {
         var veiculo = this.veiculoRepository.findById(placa)
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("Veiculo não encontrado") );
 
         return veiculo.toDTO();
     }

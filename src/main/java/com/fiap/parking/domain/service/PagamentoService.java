@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.service;
 
 import com.fiap.parking.domain.dto.PagamentoDTO;
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.Parquimetro;
 import com.fiap.parking.domain.model.Pagamento;
 import com.fiap.parking.domain.model.StatusPagamento;
@@ -24,7 +25,7 @@ public class PagamentoService {
 
     public PagamentoDTO pagamento(UUID parquimetro_id) {
         Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
-                .orElseThrow(()-> new IllegalArgumentException("Parquimetro nao encontrado"));
+                .orElseThrow(()-> new EntidadeNaoEncontrada("Parquimetro nao encontrado"));
 
         this.tipoParquimetroVariavel(parquimetro);
 

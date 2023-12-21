@@ -1,5 +1,6 @@
 package com.fiap.parking.domain.service;
 
+import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.Parquimetro;
 import com.fiap.parking.domain.model.Periodo;
 import com.fiap.parking.domain.repositories.ParquimetroRepository;
@@ -24,7 +25,7 @@ public class PeriodoService {
 
     public void save(UUID parquimetro_id) {
         Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
-                .orElseThrow(() -> new IllegalArgumentException("Parquimetro não existe"));
+                .orElseThrow(() -> new EntidadeNaoEncontrada("Parquimetro não existe"));
 
         Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos());
 
