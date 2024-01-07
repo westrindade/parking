@@ -2,8 +2,10 @@ package com.fiap.parking.domain.dto;
 
 import com.fiap.parking.domain.model.Veiculo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
+@Schema(description = "Representa o veiculo", title = "Veiculo")
 public record VeiculoDTO(
         @NotBlank String placa,
         @NotBlank String modelo,

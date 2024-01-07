@@ -3,6 +3,8 @@ package com.fiap.parking.domain.dto;
 import com.fiap.parking.domain.model.Condutor;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.model.Veiculo;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+@Schema(description = "Representa o condutor do veiculo", title = "Condutor")
 public record CondutorDTO (
     @CPF @NotBlank(message = "O cpf precisa ser informado") String cpf,
     @NotBlank(message = "O nome precisa ser informado") String nome,
