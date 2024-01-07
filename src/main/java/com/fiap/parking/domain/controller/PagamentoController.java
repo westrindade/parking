@@ -3,7 +3,7 @@ package com.fiap.parking.domain.controller;
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.service.PagamentoService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,7 +30,7 @@ public class PagamentoController {
     @Autowired
     PagamentoService pagamentoService;
 
-    @ApiOperation(value = "Pagar parquimetro")
+    @Operation(summary = "Pagar parquimetro")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Pagamento realizado com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),

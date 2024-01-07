@@ -4,7 +4,7 @@ import com.fiap.parking.domain.dto.ParquimetroDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.*;
 import com.fiap.parking.domain.service.ParquimetroService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -29,7 +29,7 @@ public class ParquimetroController {
     @Autowired
     private ParquimetroService parquimetroService;
 
-    @ApiOperation(value = "Retorna uma lista de parquimetro utilizados")
+    @Operation(summary = "Retorna uma lista de parquimetro utilizados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna a lista de parquimetro",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = ParquimetroDTO.class)))),
@@ -45,7 +45,7 @@ public class ParquimetroController {
         }
     }
 
-    @ApiOperation(value = "Retorna o parquimetro pelo id")
+    @Operation(summary = "Retorna o parquimetro pelo id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna o parquimetro",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
@@ -67,7 +67,7 @@ public class ParquimetroController {
         }
     }
 
-    @ApiOperation(value = "Retorna uma lista de parquimetro pelo status")
+    @Operation(summary = "Retorna uma lista de parquimetro pelo status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna a lista de parquimetro",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
@@ -91,7 +91,7 @@ public class ParquimetroController {
         }
     }
 
-    @ApiOperation(value = "Retorna uma lista de parquimetro pelo status e tipo tempo (fixo,variavel)")
+    @Operation(summary = "Retorna uma lista de parquimetro pelo status e tipo tempo (fixo,variavel)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna a lista de parquimetro",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
@@ -117,7 +117,7 @@ public class ParquimetroController {
         }
     }
 
-    @ApiOperation(value = "Inclui parquimetro tipo Fixo")
+    @Operation(summary = "Inclui parquimetro tipo Fixo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parquimetro incluido com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
@@ -144,7 +144,7 @@ public class ParquimetroController {
         }
     }
 
-    @ApiOperation(value = "Inclui parquimetro tipo Variavel")
+    @Operation(summary = "Inclui parquimetro tipo Variavel")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parquimetro incluido com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
@@ -170,7 +170,7 @@ public class ParquimetroController {
         }
     }
 
-    @ApiOperation(value = "Encerra o parquimetro")
+    @Operation(summary = "Encerra o parquimetro")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parquimetro encerrado com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),

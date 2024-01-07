@@ -2,7 +2,7 @@ package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.service.PeriodoService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,7 +25,7 @@ public class PeriodoController {
     @Autowired
     private PeriodoService periodoService;
 
-    @ApiOperation(value = "Inclui Periodo")
+    @Operation(summary = "Inclui Periodo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Periodo salvo com sucesso",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),

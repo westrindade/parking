@@ -5,8 +5,8 @@ import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.service.CondutorService;
 
-import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -23,7 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Condutor",description = "Condutor que utilizara o parquimetro")
+@Tag(name = "Condutor", description = "Condutor que utilizara o parquimetro")
 @RestController
 @RequestMapping("/condutores")
 public class CondutorController {
@@ -31,7 +31,7 @@ public class CondutorController {
     @Autowired
     private CondutorService condutorService;
 
-    @ApiOperation(value = "Retorna uma lista de condutores")
+    @Operation(summary = "Retorna uma lista de condutores")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna a lista de condutores",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = CondutorDTO.class)))),
@@ -49,7 +49,7 @@ public class CondutorController {
         }
     }
 
-    @ApiOperation(value = "Retorna um condutor pelo cpf informado")
+    @Operation(summary = "Retorna um condutor pelo cpf informado")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna a lista de condutores",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
@@ -71,7 +71,8 @@ public class CondutorController {
         }
     }
 
-    @ApiOperation(value = "Inclui condutor")
+    
+    @Operation(summary = "Inclui um condutor")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Condutor incluido com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
@@ -97,7 +98,7 @@ public class CondutorController {
         }
     }
 
-    @ApiOperation(value = "Salva o tipo de pagamento para o condutor")
+    @Operation(summary = "Salva o tipo de pagamento para o condutor")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Tipo de Pagamento incluido",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),

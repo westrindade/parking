@@ -4,7 +4,7 @@ import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.dto.VeiculoDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.service.VeiculoService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -26,7 +26,7 @@ public class VeiculoController {
     @Autowired
     private VeiculoService veiculoService;
 
-    @ApiOperation(value = "Retorna uma lista de veiculos com o condutor informado")
+    @Operation(summary = "Retorna uma lista de veiculos com o condutor informado")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna a lista de veiculos com o condutor informado",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = CondutorDTO.class)))),
@@ -48,7 +48,7 @@ public class VeiculoController {
         }
     }
 
-    @ApiOperation(value = "Retorna condutor dono do veiculo")
+    @Operation(summary = "Retorna condutor dono do veiculo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna condutor dono do veiculo",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = VeiculoDTO.class)) }),
