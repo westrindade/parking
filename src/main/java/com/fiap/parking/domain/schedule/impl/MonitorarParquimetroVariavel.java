@@ -47,10 +47,10 @@ public class MonitorarParquimetroVariavel implements MonitoramentoParquimetro {
 
     private void executar(Parquimetro parquimetro){
         if (!parquimetro.getPeriodos().isEmpty()){
-            Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos())
+            final Periodo ultimoPeriodo = periodoUtilService.getDataFinalMaisRecenteDaListaDePeriodos(parquimetro.getPeriodos())
                     .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
 
-            long tempoCalculado = this.calcularTempoPeriodo(ultimoPeriodo);
+            final long tempoCalculado = this.calcularTempoPeriodo(ultimoPeriodo);
 
             this.enviarNotificacao(tempoCalculado,ultimoPeriodo);
             this.saveProximoPeriodo(tempoCalculado,ultimoPeriodo,parquimetro);

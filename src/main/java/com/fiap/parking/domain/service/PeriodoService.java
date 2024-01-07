@@ -24,10 +24,10 @@ public class PeriodoService {
     private PeriodoUtilService periodoUtilService;
 
     public void save(UUID parquimetro_id) {
-        Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
+        final Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
                 .orElseThrow(() -> new EntidadeNaoEncontrada("Parquimetro não existe"));
 
-        Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos());
+        final Optional<Periodo> ultimoPeriodo = this.periodoUtilService.getDataFinalMaisRecenteDaListaDePeriodos(parquimetro.getPeriodos());
 
         this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.get().getDataHoraFinal(),parquimetro));
     }

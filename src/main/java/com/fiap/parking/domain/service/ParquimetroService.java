@@ -76,9 +76,8 @@ public class ParquimetroService {
             periodos = this.adicionarPeriodoFixo(parquimetro);
             parquimetro.setValorTotal(this.calcularValorTotalFixo(parquimetroDTO));
         } else {
-            LocalDateTime dataInicial = LocalDateTime.now();
             periodos = new ArrayList<>();
-            periodos.add(this.periodoUtilService.adicionaPeriodoVariavel(dataInicial,parquimetro));
+            periodos.add(this.periodoUtilService.adicionaPeriodoVariavel(LocalDateTime.now(), parquimetro));
         }
 
         if (periodos.isEmpty())
@@ -104,7 +103,7 @@ public class ParquimetroService {
     }
 
     private void encerraUltimoPeriodo(List<Periodo> periodos){
-        Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(periodos)
+        Periodo ultimoPeriodo = periodoUtilService.getDataFinalMaisRecenteDaListaDePeriodos(periodos)
                 .orElseThrow(() -> new EntidadeNaoEncontrada("Periodo não existe"));
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);

@@ -2,12 +2,18 @@ package com.fiap.parking.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_parquimetro_periodo")
 public class Periodo {
@@ -33,14 +39,4 @@ public class Periodo {
     @JoinColumn(name = "cd_parquimetro", referencedColumnName = "cd_parquimetro", nullable = true)
     private Parquimetro parquimetro;
 
-    @Override
-    public String toString() {
-        return "Periodo{" +
-                "parquimetro='" + this.getParquimetro().getId() + '\'' +
-                ", dataInicial='" + this.getDataHoraInicial() + '\'' +
-                ", dataFinal='" + this.getDataHoraFinal() + '\'' +
-                ", AcaoPeriodo='" + this.getAcaoPeriodo() + '\'' +
-                ", getDataHoraNotificacao='" + this.getDataHoraNotificacao() + '\'' +
-                '}';
-    }
 }
