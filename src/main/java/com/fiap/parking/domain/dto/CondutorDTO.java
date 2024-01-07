@@ -9,39 +9,48 @@ import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.hibernate.validator.constraints.br.CPF;
 
 public record CondutorDTO (
-        String cpf,
-        @NotBlank(message = "O nome precisa ser informado")
-        String nome,
-        @NotNull(message = "O celular precisa ser informado")
-        String celular,
-        LocalDate dataNascimento,
-        String tipoLogradouro,
-        String logradouro,
-        String nroLogradouro,
-        String bairro,
-        String cidade,
-        String uf,
-        String cep,
-        TipoPagamento tipoPagamentoPadrao,
-        @Size(message = "Nao pode estar vazia", min = 1)
-        List<Veiculo> veiculos
+    @CPF @NotBlank(message = "O cpf precisa ser informado") String cpf,
+    @NotBlank(message = "O nome precisa ser informado") String nome,
+    @NotNull(message = "O celular precisa ser informado") String celular,
+    LocalDate dataNascimento,
+    String tipoLogradouro,
+    String logradouro,
+    String nroLogradouro,
+    String bairro,
+    String cidade,
+    String uf,
+    String cep,
+    @NotNull TipoPagamento tipoPagamentoPadrao,
+    @NotNull @Size(min = 1) List<VeiculoDTO> veiculos
 ) {
-        public Condutor toCondutor() {
-                return new Condutor(
-                        this.cpf(),
-                        this.nome(),
-                        this.celular(),
-                        this.dataNascimento(),
-                        this.tipoLogradouro(),
-                        this.logradouro(),
-                        this.nroLogradouro(),
-                        this.bairro(),
-                        this.cidade(),
-                        this.uf(),
-                        this.cep(),
-                        this.veiculos()
-                );
-        }
+    public Condutor toCondutor() {
+        final Condutor condutor = new Condutor(
+            this.cpf(),
+            this.nome(),
+            this.celular(),
+            this.dataNascimento(),
+            this.tipoLogradouro(),
+            this.logradouro(),
+            this.nroLogradouro(),
+            this.bairro(),
+            this.cidade(),
+            this.uf(),
+            this.cep(),
+            this.tipoPagamentoPadrao()
+        );
+        
+        final List<Veiculo> veiculosList = veiculos().stream().map(veiculoDTO -> 
+            veiculoDTO.toVeiculo().toBuilder()
+                .condutor(condutor)
+            .build()
+        ).collect(Collectors.toList());
+
+        condutor.setVeiculos(veiculosList);
+        return condutor;
+    }
 }

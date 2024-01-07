@@ -2,7 +2,6 @@ package com.fiap.parking.domain.service;
 
 import com.fiap.parking.domain.model.Condutor;
 import com.fiap.parking.domain.model.TipoPagamento;
-import com.fiap.parking.domain.model.Veiculo;
 import com.fiap.parking.domain.repositories.CondutorRepository;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
@@ -11,7 +10,6 @@ import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,14 +33,6 @@ public class CondutorService {
 
     public CondutorDTO save(CondutorDTO condutorDTO) {
         final Condutor condutor = condutorDTO.toCondutor();
-
-        List<Veiculo> veiculos = new ArrayList<>();
-        for (Veiculo veiculo : condutorDTO.veiculos()) {
-            veiculo.setCondutor(condutor);
-            veiculos.add(veiculo);
-        }
-        condutor.setVeiculos(veiculos);
-
         return this.condutorRepository.save(condutor).toDTO();
     }
 
