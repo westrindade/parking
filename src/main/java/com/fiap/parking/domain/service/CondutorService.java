@@ -4,6 +4,7 @@ import com.fiap.parking.domain.model.Condutor;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.model.Veiculo;
 import com.fiap.parking.domain.repositories.CondutorRepository;
+
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,16 +46,10 @@ public class CondutorService {
         return this.condutorRepository.save(condutor).toDTO();
     }
 
-    public void savePayment(String cpf, String tipoPagamento) {
-        String tipoPagamentoUpperCase = tipoPagamento.toUpperCase();
-        if (Arrays.stream(TipoPagamento.values())
-                .noneMatch(enumValue -> enumValue.name().equals(tipoPagamentoUpperCase))) {
-            throw new IllegalArgumentException("Tipo de pagamento inválido: " + tipoPagamento);
-        }
-        var condutor =  this.condutorRepository.findById(cpf)
-                .orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado") );
+    public void savePayment(final String cpf, TipoPagamento tipoPagamento) {
+        final var condutor =  this.condutorRepository.findById(cpf).orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado"));
 
-        condutor.setTipoPagamentoPadrao(TipoPagamento.valueOf(tipoPagamento.toUpperCase()));
+        condutor.setTipoPagamentoPadrao(tipoPagamento);
         this.condutorRepository.save(condutor);
     }
 }

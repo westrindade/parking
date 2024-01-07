@@ -2,6 +2,7 @@ package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
+import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.service.CondutorService;
 
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -106,12 +108,12 @@ public class CondutorController {
     })
     @PutMapping("/{cpf}/salvarTipoPgto")
     public ResponseEntity<?> savaPayment(
-                            @Parameter(in = ParameterIn.PATH, description = "CPF do condutor")
-                            @PathVariable String cpf,
-                            @RequestParam(name = "tipoPagamento", defaultValue = "") String tipoPagamento){
-
+        @Parameter(in = ParameterIn.PATH, description = "CPF do condutor")
+        @PathVariable String cpf,
+        @NotNull @RequestParam(name = "tipoPagamento", defaultValue = "") TipoPagamento tipoPagamento
+    ){
         try {
-            this.condutorService.savePayment(cpf,tipoPagamento);
+            this.condutorService.savePayment(cpf, tipoPagamento);
             return ResponseEntity.status(HttpStatus.CREATED).body("Tipo de Pagamento incluido ao condutor");
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
