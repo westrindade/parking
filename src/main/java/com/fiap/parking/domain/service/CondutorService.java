@@ -27,7 +27,7 @@ public class CondutorService {
 
     public CondutorDTO findByCpf(String cpf) {
         var condutor =  this.condutorRepository.findById(cpf)
-                .orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.condutor.nao.encontrado") );
         return condutor.toDTO();
     }
 
@@ -37,7 +37,7 @@ public class CondutorService {
     }
 
     public void savePayment(final String cpf, TipoPagamento tipoPagamento) {
-        final var condutor =  this.condutorRepository.findById(cpf).orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado"));
+        final var condutor =  this.condutorRepository.findById(cpf).orElseThrow( () -> new EntidadeNaoEncontrada("excecao.condutor.nao.encontrado"));
 
         condutor.setTipoPagamentoPadrao(tipoPagamento);
         this.condutorRepository.save(condutor);

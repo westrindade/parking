@@ -4,6 +4,7 @@ import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.service.CondutorService;
+import com.fiap.parking.infra.utils.Utils;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
@@ -92,7 +93,7 @@ public class CondutorController {
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Utils.getMessage("body.atributo.chave.primaria.nao.informado"));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -115,7 +116,7 @@ public class CondutorController {
     ){
         try {
             this.condutorService.savePayment(cpf, tipoPagamento);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Tipo de Pagamento incluido ao condutor");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Utils.getMessage("body.tipo.pagamento.incluido.condutor"));
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {

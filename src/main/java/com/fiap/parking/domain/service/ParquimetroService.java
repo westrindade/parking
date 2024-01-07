@@ -8,6 +8,7 @@ import com.fiap.parking.domain.repositories.ParquimetroRepository;
 import com.fiap.parking.domain.repositories.PeriodoRepository;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.ParquimetroService;
+import com.fiap.parking.infra.utils.Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class ParquimetroService {
 
     public ParquimetroDTO findById(UUID id) {
         var parquimetros = this.parquimetroRepository.findById(id)
-                .orElseThrow( () -> new EntidadeNaoEncontrada("Parquimetro não encontrado") ).toDTO();
+                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado") ).toDTO();
         return parquimetros;
     }
 
@@ -62,9 +63,9 @@ public class ParquimetroService {
 
     public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
         var veiculo = this.veiculoRepository.findById(parquimetroDTO.veiculo())
-                .orElseThrow( () -> new EntidadeNaoEncontrada("Veiculo não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.veiculo.nao.encontrado") );
         var condutor =  this.condutorRepository.findById(parquimetroDTO.condutor())
-                .orElseThrow( () -> new EntidadeNaoEncontrada("Condutor não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.condutor.nao.encontrado") );
 
         Parquimetro parquimetro = parquimetroDTO.toParquimetro();
         parquimetro.setValorHora(this.valorHora);
@@ -81,7 +82,7 @@ public class ParquimetroService {
         }
 
         if (periodos.isEmpty())
-            throw new IllegalArgumentException("Período não informado");
+            throw new IllegalArgumentException(Utils.getMessage("excecao.periodo.nao.informado"));
 
         parquimetro.setPeriodos(periodos);
         parquimetro.setCondutor(condutor);
@@ -92,7 +93,7 @@ public class ParquimetroService {
 
     public ParquimetroDTO condutorInformaResposta(UUID id){
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
-                                            .orElseThrow( () -> new EntidadeNaoEncontrada("Parquimetro não encontrado") );
+                                            .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado") );
         parquimetro.setStatus(StatusParquimetro.ENCERRADO);
         parquimetro.setValorTotal(this.calcularValorTotalVariavel(parquimetro));
 
@@ -104,7 +105,7 @@ public class ParquimetroService {
 
     private void encerraUltimoPeriodo(List<Periodo> periodos){
         Periodo ultimoPeriodo = periodoUtilService.getDataFinalMaisRecenteDaListaDePeriodos(periodos)
-                .orElseThrow(() -> new EntidadeNaoEncontrada("Periodo não existe"));
+                .orElseThrow(() -> new EntidadeNaoEncontrada("excecao.periodo.nao.existe"));
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
         this.periodoRepository.save(ultimoPeriodo);

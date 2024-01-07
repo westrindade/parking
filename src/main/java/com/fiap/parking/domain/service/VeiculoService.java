@@ -23,7 +23,7 @@ public class VeiculoService {
 
     public VeiculoDTO findById(String placa) {
         var veiculo = this.veiculoRepository.findById(placa)
-                .orElseThrow( () -> new EntidadeNaoEncontrada("Veiculo não encontrado") );
+                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.veiculo.nao.encontrado") );
 
         return veiculo.toDTO();
     }
