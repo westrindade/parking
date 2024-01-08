@@ -5,6 +5,7 @@ import com.fiap.parking.domain.repositories.ParquimetroRepository;
 import com.fiap.parking.domain.repositories.PeriodoRepository;
 import com.fiap.parking.domain.schedule.MonitoramentoParquimetro;
 import com.fiap.parking.domain.service.PeriodoUtilService;
+import com.fiap.parking.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -48,7 +49,7 @@ public class MonitorareParquimetroFixo implements MonitoramentoParquimetro {
     private void executar(Parquimetro parquimetro){
         if (!parquimetro.getPeriodos().isEmpty()){
             Periodo periodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos())
-                    .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
+                    .orElseThrow(() -> new IllegalArgumentException(Utils.getMessage("periodo.nao.existe")));
 
             long tempoCalculado = this.calcularTempoPeriodo(periodo);
 

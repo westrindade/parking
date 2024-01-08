@@ -8,6 +8,7 @@ import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.repositories.ParquimetroRepository;
 import com.fiap.parking.domain.repositories.PagamentoRepository;
 import com.fiap.parking.domain.service.PagamentoService;
+import com.fiap.parking.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class PagamentoServiceImpl implements PagamentoService {
     public PagamentoDTO pagamento(UUID parquimetro_id) {
 
         Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
-                .orElseThrow(()-> new IllegalArgumentException("Parquimetro nao encontrado"));
+                .orElseThrow(()-> new IllegalArgumentException(Utils.getMessage("parquimetro.nao.encontrado")));
 
         this.tipoParquimetroVariavel(parquimetro);
 
@@ -44,7 +45,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     private void tipoParquimetroVariavel(Parquimetro parquimetro){
         if (parquimetro.getCondutor().getTipoPagamentoPadrao() == TipoPagamento.PIX){
-            throw new IllegalStateException("PIX não é aceito em parquimetro VARIAVEL");
+            throw new IllegalStateException(Utils.getMessage("pix.nao.aceito.em.parquimetro.variavel"));
         }
     }
 

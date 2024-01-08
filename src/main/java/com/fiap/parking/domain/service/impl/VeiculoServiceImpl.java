@@ -4,6 +4,7 @@ import com.fiap.parking.domain.dto.VeiculoDTO;
 import com.fiap.parking.domain.model.Veiculo;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.VeiculoService;
+import com.fiap.parking.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -28,7 +29,7 @@ public class VeiculoServiceImpl implements VeiculoService {
     @Override
     public VeiculoDTO findById(String placa) {
         var veiculo = this.veiculoRepository.findById(placa)
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );
+                .orElseThrow( () -> new IllegalArgumentException(Utils.getMessage("veiculo.nao.encontrado")));
 
         return this.toVeiculoDTO(veiculo);
     }

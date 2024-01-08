@@ -8,6 +8,7 @@ import com.fiap.parking.domain.repositories.PeriodoRepository;
 import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.ParquimetroService;
 import com.fiap.parking.domain.service.PeriodoUtilService;
+import com.fiap.parking.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +44,7 @@ public class ParquimetroServiceImpl implements ParquimetroService {
     @Override
     public ParquimetroDTO findById(UUID id) {
         var parquimetros = this.toParquimetroDTO(this.parquimetroRepository.findById(id)
-                .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") ) );
+                .orElseThrow( () -> new IllegalArgumentException(Utils.getMessage("parquimetro.nao.encontrado")) ) );
         return parquimetros;
     }
 
@@ -67,9 +68,9 @@ public class ParquimetroServiceImpl implements ParquimetroService {
     public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
 
         var veiculo = this.veiculoRepository.findById(parquimetroDTO.veiculo())
-                .orElseThrow( () -> new IllegalArgumentException("Veiculo não encontrado") );;
+                .orElseThrow( () -> new IllegalArgumentException(Utils.getMessage("veiculo.nao.encontrado")));
         var condutor =  this.condutorRepository.findById(parquimetroDTO.condutor())
-                .orElseThrow( () -> new IllegalArgumentException("Condutor não encontrado") );
+                .orElseThrow( () -> new IllegalArgumentException(Utils.getMessage("condutor.nao.encontrado")) );
 
         Parquimetro parquimetro = toParquimetro(parquimetroDTO);
         parquimetro.setValorHora(this.valorHora);
@@ -87,7 +88,7 @@ public class ParquimetroServiceImpl implements ParquimetroService {
         }
 
         if (periodos.isEmpty())
-            throw new IllegalArgumentException("Período não informado");
+            throw new IllegalArgumentException(Utils.getMessage("periodo.nao.informado"));
 
         parquimetro.setPeriodos(periodos);
         parquimetro.setCondutor(condutor);
@@ -100,7 +101,7 @@ public class ParquimetroServiceImpl implements ParquimetroService {
     public ParquimetroDTO condutorInformaResposta(UUID id){
 
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
-                                            .orElseThrow( () -> new IllegalArgumentException("Parquimetro não encontrado") );
+                                            .orElseThrow( () -> new IllegalArgumentException(Utils.getMessage("parquimetro.nao.encontrado")) );
         parquimetro.setStatus(StatusParquimetro.ENCERRADO);
         parquimetro.setValorTotal(this.calcularValorTotalVariavel(parquimetro));
 
@@ -112,7 +113,7 @@ public class ParquimetroServiceImpl implements ParquimetroService {
 
     private void encerraUltimoPeriodo(List<Periodo> periodos){
         Periodo ultimoPeriodo = periodoUtilService.ordenarDecrescentePegarPrimeiro(periodos)
-                .orElseThrow(() -> new IllegalArgumentException("Periodo não existe"));
+                .orElseThrow(() -> new IllegalArgumentException(Utils.getMessage("periodo.nao.existe")));
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
         this.periodoRepository.save(ultimoPeriodo);

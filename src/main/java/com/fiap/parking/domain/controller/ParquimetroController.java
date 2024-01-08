@@ -3,6 +3,7 @@ package com.fiap.parking.domain.controller;
 import com.fiap.parking.domain.dto.ParquimetroDTO;
 import com.fiap.parking.domain.model.*;
 import com.fiap.parking.domain.service.ParquimetroService;
+import com.fiap.parking.utils.Utils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -140,7 +141,7 @@ public class ParquimetroController {
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Utils.getMessage("chave.primaria.nao.informada"));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -167,7 +168,7 @@ public class ParquimetroController {
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Utils.getMessage("chave.primaria.nao.informada"));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }

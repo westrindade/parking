@@ -6,6 +6,7 @@ import com.fiap.parking.domain.repositories.ParquimetroRepository;
 import com.fiap.parking.domain.repositories.PeriodoRepository;
 import com.fiap.parking.domain.service.PeriodoService;
 import com.fiap.parking.domain.service.PeriodoUtilService;
+import com.fiap.parking.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class PeriodoServiceImpl implements PeriodoService {
     public void save(UUID parquimetro_id) {
 
         Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
-                .orElseThrow(() -> new IllegalArgumentException("Parquimetro não existe"));
+                .orElseThrow(() -> new IllegalArgumentException(Utils.getMessage("parquimetro.nao.encontrado")));
 
         Optional<Periodo> ultimoPeriodo = this.periodoUtilService.ordenarDecrescentePegarPrimeiro(parquimetro.getPeriodos());
 

@@ -2,6 +2,7 @@ package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.PeriodoService;
+import com.fiap.parking.utils.Utils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -43,11 +44,11 @@ public class PeriodoController {
         try{
             this.periodoService.save(parquimetro_id);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body("Periodo salvo com sucesso");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Utils.getMessage("periodo.salvo.com.sucesso"));
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Utils.getMessage("chave.primaria.nao.informada"));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }

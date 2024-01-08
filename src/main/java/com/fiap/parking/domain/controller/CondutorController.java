@@ -2,6 +2,7 @@ package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.service.CondutorService;
+import com.fiap.parking.utils.Utils;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -89,7 +90,7 @@ public class CondutorController {
         } catch (IllegalArgumentException ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Atributo chave primaria não informado");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Utils.getMessage("chave.primaria.nao.informada"));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -112,7 +113,7 @@ public class CondutorController {
 
         try {
             this.condutorService.savePayment(cpf,tipoPagamento);
-            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body("Tipo de Pagamento incluido ao condutor");
+            return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(Utils.getMessage("tipo.pagamento.incluido.para.condutor"));
 
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
