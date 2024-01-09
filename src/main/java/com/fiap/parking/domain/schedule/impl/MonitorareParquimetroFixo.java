@@ -37,9 +37,12 @@ public class MonitorareParquimetroFixo implements MonitoramentoParquimetro {
                 StatusParquimetro.ABERTO, TipoParquimetro.FIXO);
         List<Parquimetro> parquimetros = parquimetroList.map(Collections::singletonList).orElse(Collections.emptyList());
 
-        for(Parquimetro parquimetro : parquimetros){
-            this.executar(parquimetro);
-        }
+        //Integração com mensageria
+        parquimetros.parallelStream().forEach(this::executar);
+
+//        for(Parquimetro parquimetro : parquimetros){
+//            this.executar(parquimetro);
+//        }
     }
 
     private long calcularTempoPeriodo(Periodo ultimoPeriodo){
@@ -56,6 +59,8 @@ public class MonitorareParquimetroFixo implements MonitoramentoParquimetro {
 
             this.enviarNotificacao(tempoCalculado,periodo);
             this.encerrarParquimetro(tempoCalculado,parquimetro);
+
+            System.out.println(parquimetro);
         }
     }
 

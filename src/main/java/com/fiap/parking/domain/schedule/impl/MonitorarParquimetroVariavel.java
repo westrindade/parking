@@ -35,11 +35,15 @@ public class MonitorarParquimetroVariavel implements MonitoramentoParquimetro {
         System.out.println("Iniciando Monitoramento Parquimetro Variavel [" + LocalDateTime.now() + "]");
         Optional<Parquimetro> parquimetroList = parquimetroRepository.findByStatusAndTipoParquimetro(
                 StatusParquimetro.ABERTO, TipoParquimetro.VARIAVEL);
-        List<Parquimetro> parquimetros = parquimetroList.map(Collections::singletonList).orElse(Collections.emptyList());
+        List<Parquimetro> parquimetros =
+                parquimetroList.map(Collections::singletonList).orElse(Collections.emptyList());
 
-        for(Parquimetro parquimetro : parquimetros){
-            this.executar(parquimetro);
-        }
+        //Integração com mensageria
+        parquimetros.parallelStream().forEach(this::executar);
+
+//        for(Parquimetro parquimetro : parquimetros){
+//            this.executar(parquimetro);
+//        }
     }
 
     private long calcularTempoPeriodo(Periodo ultimoPeriodo){
@@ -56,6 +60,8 @@ public class MonitorarParquimetroVariavel implements MonitoramentoParquimetro {
 
             this.enviarNotificacao(tempoCalculado,ultimoPeriodo);
             this.saveProximoPeriodo(tempoCalculado,ultimoPeriodo,parquimetro);
+
+            System.out.println(parquimetro);
             //caso o usuario responder , a finalizacao sera no endpoint de resposta
         }
     }
