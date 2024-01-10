@@ -21,14 +21,13 @@ import java.util.UUID;
 public class PagamentoService {
 
     @Autowired
-    private ParquimetroRepository parquimetroRepository;
-    @Autowired
     private PagamentoRepository pagamentoRepository;
+    @Autowired
+    private ParquimetroService parquimetroService;
+
 
     public PagamentoDTO pagamento(UUID parquimetro_id) {
-        Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
-                .orElseThrow(()-> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado"));
-
+        Parquimetro parquimetro = this.parquimetroService.findById(parquimetro_id).toParquimetro();
         this.tipoParquimetroVariavel(parquimetro);
 
         Pagamento pagamento = new Pagamento();
@@ -39,7 +38,6 @@ public class PagamentoService {
         pagamento.setDataHora(LocalDateTime.now());
 
         pagamento = this.pagamentoRepository.save(pagamento);
-
         return pagamento.toDTO();
     }
 

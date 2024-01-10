@@ -17,19 +17,14 @@ import java.util.*;
 public class PeriodoService {
     @Autowired
     private PeriodoRepository periodoRepository;
-
     @Autowired
-    private ParquimetroRepository parquimetroRepository;
-
+    private ParquimetroService parquimetroService;
     @Autowired
     private PeriodoUtilService periodoUtilService;
 
     public void save(UUID parquimetro_id) {
-        final Parquimetro parquimetro = this.parquimetroRepository.findById(parquimetro_id)
-                .orElseThrow(() -> new EntidadeNaoEncontrada(Utils.getMessage("excecao.parquimetro.nao.existe")));
-
+        final Parquimetro parquimetro = this.parquimetroService.findById(parquimetro_id).toParquimetro();
         final Optional<Periodo> ultimoPeriodo = this.periodoUtilService.getDataFinalMaisRecenteDaListaDePeriodos(parquimetro.getPeriodos());
-
         this.periodoRepository.save(this.periodoUtilService.adicionaPeriodoVariavel(ultimoPeriodo.get().getDataHoraFinal(),parquimetro));
     }
 }
