@@ -33,6 +33,9 @@ public class ParquimetroService {
     @Autowired
     private PeriodoRepository periodoRepository;
 
+    @Autowired
+    private CondutorService condutorService;
+
     @Value("${parquimetro.valorHora}")
     private BigDecimal valorHora;
 
@@ -155,5 +158,11 @@ public class ParquimetroService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("TipoParquimetro desconhecido: " + tipoParquimetro);
         }
+    }
+
+    public List<ParquimetroDTO> findByCondutor(String cpf) {
+        this.condutorService.findByCpf(cpf);
+        var parquimetros = this.parquimetroRepository.findByCondutor(cpf);
+        return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 }
