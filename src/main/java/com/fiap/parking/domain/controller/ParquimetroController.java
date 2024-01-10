@@ -9,7 +9,6 @@ import com.fiap.parking.infra.utils.Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,22 +30,6 @@ public class ParquimetroController {
     @Autowired
     private ParquimetroService parquimetroService;
 
-    @Operation(summary = "Retorna uma lista de parquimetro utilizados")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Retorna a lista de parquimetro",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = ParquimetroDTO.class)))),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
-    })
-    @GetMapping
-    public ResponseEntity<?> ListarTodos(){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.findAll());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-    }
-
     @Operation(summary = "Retorna o parquimetro pelo id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna o parquimetro",
@@ -63,56 +46,6 @@ public class ParquimetroController {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.findById(id));
         } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-    }
-
-    @Operation(summary = "Retorna uma lista de parquimetro pelo status")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Retorna a lista de parquimetro",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
-            @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
-                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
-    })
-    @GetMapping("/status/{status}")
-    public ResponseEntity<?> ListarTodosPorStatus(
-            @Parameter(in = ParameterIn.PATH, description = "Status do parquimetro")
-            @PathVariable String status){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    this.parquimetroService.findByStatus(status)
-            );
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-        }
-    }
-
-    @Operation(summary = "Retorna uma lista de parquimetro pelo status e tipo tempo (fixo,variavel)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Retorna a lista de parquimetro",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
-            @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
-                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
-    })
-    @GetMapping("/status/{status}/tipo/{tipo}")
-    public ResponseEntity<?> ListarTodosPorStatusETipoParquimetro(
-            @Parameter(in = ParameterIn.PATH, description = "Status do parquimetro")
-            @PathVariable String status,
-            @Parameter(in = ParameterIn.PATH, description = "Tipo de parquimetro")
-            @PathVariable(value = "tipo", required = true) String tipoParquimetro){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(
-                    this.parquimetroService.findByStatusAndTipoParquimetro(status,tipoParquimetro)
-            );
-        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,24 +30,6 @@ public class CondutorController {
 
     @Autowired
     private CondutorService condutorService;
-
-    @Operation(summary = "Retorna uma lista de condutores")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Retorna a lista de condutores",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = CondutorDTO.class)))),
-            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
-    })
-    @GetMapping
-    public ResponseEntity<?> ListarTodos(){
-        try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.findAll());
-        } catch (Exception ex){
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
-        }
-    }
 
     @Operation(summary = "Retorna um condutor pelo cpf informado")
     @ApiResponses(value = {
@@ -73,12 +54,10 @@ public class CondutorController {
     }
 
     
-    @Operation(summary = "Inclui um condutor")
+    @Operation(summary = "Incluir/Alterar um condutor")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Condutor incluido com sucesso",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
-            @ApiResponse(responseCode = "404", description = "Condutor não encontrado",
-                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "409", description = "Erro no preenchimento",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
@@ -90,8 +69,6 @@ public class CondutorController {
             @Valid @RequestBody CondutorDTO condutorDTO){
         try{
             return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.save(condutorDTO));
-        } catch (IllegalArgumentException ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Utils.getMessage("body.atributo.chave.primaria.nao.informado"));
         } catch (Exception ex) {
