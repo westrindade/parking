@@ -1,5 +1,6 @@
 package com.fiap.parking.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fiap.parking.domain.model.Condutor;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.model.Veiculo;
@@ -17,10 +18,11 @@ import org.hibernate.validator.constraints.br.CPF;
 
 @Schema(description = "Representa o condutor do veiculo", title = "Condutor")
 public record CondutorDTO (
-    @CPF @NotBlank(message = "O cpf precisa ser informado") String cpf,
+    //@CPF 
+    @NotBlank(message = "O cpf precisa ser informado") String cpf,
     @NotBlank(message = "O nome precisa ser informado") String nome,
     @NotNull(message = "O celular precisa ser informado") String celular,
-    LocalDate dataNascimento,
+    @JsonFormat(pattern="dd/MM/yyyy") LocalDate dataNascimento,
     String tipoLogradouro,
     String logradouro,
     String nroLogradouro,
@@ -28,7 +30,7 @@ public record CondutorDTO (
     String cidade,
     String uf,
     String cep,
-    @NotNull TipoPagamento tipoPagamentoPadrao,
+    TipoPagamento tipoPagamentoPadrao,
     @NotNull @Size(min = 1) List<VeiculoDTO> veiculos
 ) {
     public Condutor toCondutor() {

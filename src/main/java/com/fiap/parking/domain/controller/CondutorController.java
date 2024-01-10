@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.controller;
 
 import com.fiap.parking.domain.dto.CondutorDTO;
+import com.fiap.parking.domain.dto.MensagemErroHandler;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.service.CondutorService;
@@ -19,6 +20,7 @@ import jakarta.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.*;
@@ -40,14 +42,14 @@ public class CondutorController {
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
                     content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
     })
-    @GetMapping("/{cpf}")
+    @GetMapping(value = "/{cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> Obter(
             @Parameter(in = ParameterIn.PATH, description = "CPF do condutor")
             @PathVariable String cpf){
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.condutorService.findByCpf(cpf));
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MensagemErroHandler(ex.getMessage()));
         } catch (Exception ex){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
