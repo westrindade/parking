@@ -25,13 +25,13 @@ public class ParquimetroService {
     @Autowired
     private ParquimetroRepository parquimetroRepository;
     @Autowired
-    private VeiculoRepository veiculoRepository;
-    @Autowired
-    private CondutorRepository condutorRepository;
-    @Autowired
     private PeriodoUtilService periodoUtilService;
     @Autowired
-    private PeriodoRepository periodoRepository;
+    private PeriodoService periodoService;
+    @Autowired
+    private VeiculoService veiculoService;
+    @Autowired
+    private CondutorService condutorService;
 
     @Value("${parquimetro.valorHora}")
     private BigDecimal valorHora;
@@ -62,10 +62,8 @@ public class ParquimetroService {
     }
 
     public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
-        var veiculo = this.veiculoRepository.findById(parquimetroDTO.veiculo())
-                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.veiculo.nao.encontrado") );
-        var condutor =  this.condutorRepository.findById(parquimetroDTO.condutor())
-                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.condutor.nao.encontrado") );
+        var veiculo = this.veiculoService.findById(parquimetroDTO.veiculo());
+        var condutor =  this.condutorService.findByCpf(parquimetroDTO.condutor());
 
         Parquimetro parquimetro = parquimetroDTO.toParquimetro();
         parquimetro.setValorHora(this.valorHora);
@@ -85,8 +83,8 @@ public class ParquimetroService {
             throw new IllegalArgumentException(Utils.getMessage("excecao.periodo.nao.informado"));
 
         parquimetro.setPeriodos(periodos);
-        parquimetro.setCondutor(condutor);
-        parquimetro.setVeiculo(veiculo);
+        parquimetro.setCondutor(condutor.toCondutor());
+        parquimetro.setVeiculo(veiculo.toVeiculo());
 
         return this.parquimetroRepository.save(parquimetro).toDTO();
     }
@@ -108,7 +106,7 @@ public class ParquimetroService {
                 .orElseThrow(() -> new EntidadeNaoEncontrada("excecao.periodo.nao.existe"));
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
-        this.periodoRepository.save(ultimoPeriodo);
+        this.periodoService.save(ultimoPeriodo.getParquimetro().getId());
     }
 
     private BigDecimal calcularValorTotalFixo(ParquimetroDTO parquimetroDTO){
@@ -155,5 +153,11 @@ public class ParquimetroService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("TipoParquimetro desconhecido: " + tipoParquimetro);
         }
+    }
+
+    public List<ParquimetroDTO> findByCondutor(String cpf) {
+        this.condutorService.findByCpf(cpf);
+        var parquimetros = this.parquimetroRepository.findByCondutor(cpf);
+        return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 }

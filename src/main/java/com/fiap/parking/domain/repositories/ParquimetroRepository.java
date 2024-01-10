@@ -20,4 +20,7 @@ public interface ParquimetroRepository extends JpaRepository<Parquimetro, UUID> 
     @Query("SELECT v FROM Parquimetro v WHERE v.status = :status and v.tipoParquimetro = :tipoParquimetro")
     Optional<Parquimetro> findByStatusAndTipoParquimetro(@Param("status") StatusParquimetro status,
                                                         @Param("tipoParquimetro") TipoParquimetro tipoParquimetro);
+
+    @Query("SELECT v FROM Parquimetro v WHERE v.condutor.cpf = :cpf")
+    List<Parquimetro> findByCondutor(@Param("cpf") String cpf);
 }

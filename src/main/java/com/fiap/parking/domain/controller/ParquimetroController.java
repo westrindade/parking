@@ -127,4 +127,15 @@ public class ParquimetroController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
+
+    @GetMapping("/condutor/{cpf}")
+    public ResponseEntity<?> listarParquimetroPorCondutor(@PathVariable String cpf){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(this.parquimetroService.findByCondutor(cpf));
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
 }
