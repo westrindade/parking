@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.controller;
 
-import com.fiap.parking.domain.dto.ParquimetroDTO;
+import com.fiap.parking.domain.dto.ParquimetroFixoDTO;
+import com.fiap.parking.domain.dto.ParquimetroVariavelDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.*;
 import com.fiap.parking.domain.service.ParquimetroService;
@@ -33,7 +34,7 @@ public class ParquimetroController {
     @Operation(summary = "Retorna o parquimetro pelo id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Retorna o parquimetro",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroVariavelDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
@@ -55,7 +56,7 @@ public class ParquimetroController {
     @Operation(summary = "Inclui parquimetro tipo Fixo")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parquimetro incluido com sucesso",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroFixoDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "409", description = "Erro no preenchimento",
@@ -66,9 +67,9 @@ public class ParquimetroController {
     @PostMapping("/fixo")
     public ResponseEntity<?> saveFixo(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do parquimetro")
-            @Valid @RequestBody ParquimetroDTO parquimetroDTO){
+            @Valid @RequestBody ParquimetroFixoDTO parquimetroFixoDTO){
         try {
-            var retorno =  this.parquimetroService.save(parquimetroDTO, TipoParquimetro.FIXO);
+            var retorno =  this.parquimetroService.save(parquimetroFixoDTO.toParquimetro(), TipoParquimetro.FIXO);
             return ResponseEntity.status(HttpStatus.CREATED).body(retorno);
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -82,7 +83,7 @@ public class ParquimetroController {
     @Operation(summary = "Inclui parquimetro tipo Variavel")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parquimetro incluido com sucesso",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroVariavelDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Pstacionamento não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "409", description = "Erro no preenchimento",
@@ -93,9 +94,9 @@ public class ParquimetroController {
     @PostMapping("/variavel")
     public ResponseEntity<?> saveVariavel(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do parquimetro")
-            @RequestBody ParquimetroDTO oarParquimetroDTO){
+            @RequestBody ParquimetroVariavelDTO parquimetroVariavelDTO){
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.save(oarParquimetroDTO, TipoParquimetro.VARIAVEL));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.save(parquimetroVariavelDTO.toParquimetro(), TipoParquimetro.VARIAVEL));
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
@@ -108,7 +109,7 @@ public class ParquimetroController {
     @Operation(summary = "Encerra o parquimetro")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Parquimetro encerrado com sucesso",
-                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroDTO.class)) }),
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = ParquimetroVariavelDTO.class)) }),
             @ApiResponse(responseCode = "404", description = "Parquimetro não encontrado",
                     content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
@@ -119,8 +120,7 @@ public class ParquimetroController {
             @Parameter(in = ParameterIn.PATH, description = "Id do parquimetro")
             @PathVariable UUID id){
         try{
-            ParquimetroDTO parquimetroDTO = this.parquimetroService.condutorInformaResposta(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body(parquimetroDTO.valorTotal());
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.condutorInformaResposta(id));
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {

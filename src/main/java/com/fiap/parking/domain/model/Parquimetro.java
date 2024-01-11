@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fiap.parking.domain.dto.ParquimetroDTO;
+import com.fiap.parking.domain.dto.ParquimetroFixoDTO;
+import com.fiap.parking.domain.dto.ParquimetroVariavelDTO;
 
 @Data
 @Entity
@@ -60,10 +62,9 @@ public class Parquimetro {
     @OneToMany(mappedBy = "parquimetro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Periodo> periodos;
 
-    public ParquimetroDTO toDTO() {
-        return new ParquimetroDTO(
+    public ParquimetroVariavelDTO toVariavelDTO() {
+        return new ParquimetroVariavelDTO(
             this.getId(),
-            this.getTipoParquimetro(),
             this.getVeiculo().getPlaca(),
             this.getCondutor().getCpf(),
             this.getLongitude(),
@@ -73,5 +74,26 @@ public class Parquimetro {
             this.getStatus(),
             this.getPeriodos()
         );
+    }
+
+    public ParquimetroFixoDTO toFixoDTO() {
+        return new ParquimetroFixoDTO(
+            this.getId(),
+            this.getVeiculo().getPlaca(),
+            this.getCondutor().getCpf(),
+            this.getLongitude(),
+            this.getLatitude(),
+            this.getValorHora(),
+            this.getValorTotal(),
+            this.getStatus(),
+            this.getPeriodos()
+        );
+    }
+
+    public ParquimetroDTO toDTO() {
+        if(tipoParquimetro == TipoParquimetro.FIXO){
+            return toFixoDTO();
+        }
+        return toVariavelDTO();
     }
 }

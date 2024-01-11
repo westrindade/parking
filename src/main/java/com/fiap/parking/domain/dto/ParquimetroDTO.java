@@ -1,37 +1,51 @@
 package com.fiap.parking.domain.dto;
 
-import com.fiap.parking.domain.model.Parquimetro;
-import com.fiap.parking.domain.model.Periodo;
-import com.fiap.parking.domain.model.StatusParquimetro;
-import com.fiap.parking.domain.model.TipoParquimetro;
-import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-public record ParquimetroDTO(
-        UUID id,
-        @NotNull(message = "O tipo de tempo precisa ser informado")
-        TipoParquimetro tipoParquimetro,
-        String veiculo,
-        String condutor,
-        String longitude,
-        String latitude,
-        BigDecimal valorHora,
-        BigDecimal valorTotal,
-        StatusParquimetro status,
-        List<Periodo> periodos
-) {
+import com.fiap.parking.domain.model.Periodo;
+import com.fiap.parking.domain.model.StatusParquimetro;
 
-        public Parquimetro toParquimetro() {
-                return new Parquimetro(
-                        this.tipoParquimetro(),
-                        this.latitude(),
-                        this.longitude(),
-                        this.valorHora(),
-                        this.valorTotal(),
-                        this.status()
-                );
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+
+
+public abstract class ParquimetroDTO {
+    
+        @Getter @Setter
+        protected UUID id;
+        @Getter @Setter
+        protected @NotNull String veiculo;
+        @Getter @Setter
+        protected @NotNull String condutor;
+        @Getter @Setter
+        protected String longitude;
+        @Getter @Setter
+        protected String latitude;
+        @Getter @Setter
+        protected BigDecimal valorHora;
+        @Getter @Setter
+        protected BigDecimal valorTotal;
+        @Getter @Setter
+        protected StatusParquimetro status;
+        @Getter
+        protected List<Periodo> periodos;
+
+        public ParquimetroDTO(UUID id, @NotNull String veiculo, @NotNull String condutor, String longitude,
+                        String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status,
+                        List<Periodo> periodos) {
+                this.id = id;
+                this.veiculo = veiculo;
+                this.condutor = condutor;
+                this.longitude = longitude;
+                this.latitude = latitude;
+                this.valorHora = valorHora;
+                this.valorTotal = valorTotal;
+                this.status = status;
+                this.periodos = periodos;
         }
+
+        
 }

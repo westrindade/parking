@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,6 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_condutor")
 public class Condutor {
@@ -58,9 +64,9 @@ public class Condutor {
 
     @NotNull @Size(min = 1)
     @OneToMany(mappedBy = "condutor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Builder.Default
     private List<Veiculo> veiculos = new ArrayList<>();
     
-    public Condutor(){}
 
     public Condutor(
         @NotBlank @CPF String cpf, 

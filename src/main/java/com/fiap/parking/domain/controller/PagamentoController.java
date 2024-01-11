@@ -48,7 +48,7 @@ public class PagamentoController {
             @Parameter(in = ParameterIn.PATH, description = "Id do parquimetro")
             @PathVariable UUID parquimetro_id){
         try{
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.pagamentoService.pagamento(parquimetro_id));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.pagamentoService.pagamento(parquimetro_id).toDTO());
         } catch (IllegalArgumentException | EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {

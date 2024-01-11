@@ -3,10 +3,7 @@ package com.fiap.parking.domain.service;
 import com.fiap.parking.domain.dto.ParquimetroDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
 import com.fiap.parking.domain.model.*;
-import com.fiap.parking.domain.repositories.CondutorRepository;
 import com.fiap.parking.domain.repositories.ParquimetroRepository;
-import com.fiap.parking.domain.repositories.PeriodoRepository;
-import com.fiap.parking.domain.repositories.VeiculoRepository;
 import com.fiap.parking.domain.service.ParquimetroService;
 import com.fiap.parking.infra.utils.Utils;
 
@@ -41,10 +38,9 @@ public class ParquimetroService {
         return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 
-    public ParquimetroDTO findById(UUID id) {
-        var parquimetros = this.parquimetroRepository.findById(id)
-                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado") ).toDTO();
-        return parquimetros;
+    public Parquimetro findById(UUID id) {
+        return this.parquimetroRepository.findById(id)
+                .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado") );
     }
 
     public List<ParquimetroDTO> findByStatus(String status) {
@@ -61,11 +57,10 @@ public class ParquimetroService {
         return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
 
-    public ParquimetroDTO save(ParquimetroDTO parquimetroDTO, TipoParquimetro tipoParquimetro){
-        var veiculo = this.veiculoService.findById(parquimetroDTO.veiculo());
-        var condutor =  this.condutorService.findByCpf(parquimetroDTO.condutor());
+    public ParquimetroDTO save(Parquimetro parquimetro, TipoParquimetro tipoParquimetro){
+        var veiculo = this.veiculoService.findById(parquimetro.getVeiculo().getPlaca());
+        var condutor = this.condutorService.findByCpf(parquimetro.getCondutor().getCpf());
 
-        Parquimetro parquimetro = parquimetroDTO.toParquimetro();
         parquimetro.setValorHora(this.valorHora);
         parquimetro.setTipoParquimetro(tipoParquimetro);
         parquimetro.setStatus(StatusParquimetro.ABERTO);
@@ -73,7 +68,7 @@ public class ParquimetroService {
         List<Periodo> periodos;
         if (TipoParquimetro.FIXO == tipoParquimetro){
             periodos = this.adicionarPeriodoFixo(parquimetro);
-            parquimetro.setValorTotal(this.calcularValorTotalFixo(parquimetroDTO));
+            parquimetro.setValorTotal(this.calcularValorTotalFixo(parquimetro));
         } else {
             periodos = new ArrayList<>();
             periodos.add(this.periodoUtilService.adicionaPeriodoVariavel(LocalDateTime.now(), parquimetro));
@@ -88,6 +83,8 @@ public class ParquimetroService {
 
         return this.parquimetroRepository.save(parquimetro).toDTO();
     }
+
+    
 
     public ParquimetroDTO condutorInformaResposta(UUID id){
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
@@ -106,12 +103,12 @@ public class ParquimetroService {
                 .orElseThrow(() -> new EntidadeNaoEncontrada("excecao.periodo.nao.existe"));
 
         ultimoPeriodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
-        this.periodoService.save(ultimoPeriodo.getParquimetro().getId());
+        this.periodoService.save(ultimoPeriodo);
     }
 
-    private BigDecimal calcularValorTotalFixo(ParquimetroDTO parquimetroDTO){
+    private BigDecimal calcularValorTotalFixo(Parquimetro parquimetro){
         BigDecimal valorTotal = new BigDecimal("0.00");
-        for (Periodo periodo : parquimetroDTO.periodos()) {
+        for (Periodo periodo : parquimetro.getPeriodos()) {
             valorTotal = this.valorHora.multiply(BigDecimal.valueOf(
                     this.periodoUtilService.calcularIntervaloHoras(periodo.getDataHoraInicial(),periodo.getDataHoraFinal())
             ));
@@ -127,12 +124,7 @@ public class ParquimetroService {
     private List<Periodo> adicionarPeriodoFixo(Parquimetro parquimetro){
         List<Periodo> periodos = new ArrayList<>();
         for (Periodo periodo : parquimetro.getPeriodos()) {
-            periodo.setParquimetro(parquimetro);
-
-            AcaoPeriodo acaoPeriodo = null;
-            acaoPeriodo = AcaoPeriodo.ENCERRADO;
-
-            periodo.setAcaoPeriodo(acaoPeriodo);
+            periodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
             periodos.add(periodo);
         }
 

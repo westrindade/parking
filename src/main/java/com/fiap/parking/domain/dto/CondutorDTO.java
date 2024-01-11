@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 @Schema(description = "Representa o condutor do veiculo", title = "Condutor")
 public record CondutorDTO (
-    //@CPF 
+    @CPF 
     @NotBlank(message = "O cpf precisa ser informado") String cpf,
     @NotBlank(message = "O nome precisa ser informado") String nome,
     @NotNull(message = "O celular precisa ser informado") String celular,

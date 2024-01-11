@@ -2,6 +2,7 @@ package com.fiap.parking.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import com.fiap.parking.domain.dto.PagamentoDTO;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_pagamento")
 public class Pagamento {
@@ -33,6 +35,14 @@ public class Pagamento {
     @ManyToOne
     @JoinColumn(name = "cd_parquimetro", referencedColumnName = "cd_parquimetro")
     private Parquimetro parquimetro;
+
+    public Pagamento(Parquimetro parquimetro){
+        this.tipoPagamento = parquimetro.getCondutor().getTipoPagamentoPadrao();
+        this.status = StatusPagamento.SUCESSO;
+        this.parquimetro = parquimetro;
+        this.valor = parquimetro.getValorTotal();
+        this.dataHora = LocalDateTime.now();
+    }
 
     public PagamentoDTO toDTO() {
         return new PagamentoDTO(
