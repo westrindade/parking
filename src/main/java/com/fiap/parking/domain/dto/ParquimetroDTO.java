@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fiap.parking.domain.model.StatusParquimetro;
 
+import com.fiap.parking.domain.model.TipoParquimetro;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,12 +31,14 @@ public abstract class ParquimetroDTO {
         protected BigDecimal valorTotal;
         @Getter @Setter
         protected StatusParquimetro status;
-        
+        @Getter @Setter
+        protected TipoParquimetro tipoParquimetro;
+
         protected List<PeriodoDTO> periodos;
 
         public ParquimetroDTO(UUID id, @NotNull String veiculo, @NotNull String condutor, String longitude,
                         String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status,
-                        List<PeriodoDTO> periodos) {
+                        List<PeriodoDTO> periodos, TipoParquimetro tipoParquimetro) {
                 this.id = id;
                 this.veiculo = veiculo;
                 this.condutor = condutor;
@@ -44,6 +47,7 @@ public abstract class ParquimetroDTO {
                 this.valorHora = valorHora;
                 this.valorTotal = valorTotal;
                 this.status = status;
+                this.tipoParquimetro = tipoParquimetro;
                 this.periodos = periodos;
         }
 

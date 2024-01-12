@@ -20,7 +20,7 @@ public class ParquimetroFixoDTO extends ParquimetroDTO {
     public ParquimetroFixoDTO(UUID id, @NotNull String veiculo, @NotNull String condutor, String longitude,
             String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status,
             List<PeriodoDTO> periodos) {
-        super(id, veiculo, condutor, longitude, latitude, valorHora, valorTotal, status, periodos);
+        super(id, veiculo, condutor, longitude, latitude, valorHora, valorTotal, status, periodos, TipoParquimetro.FIXO);
     }
 
     public Parquimetro toParquimetro() {

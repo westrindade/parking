@@ -3,6 +3,7 @@ package com.fiap.parking.domain.service;
 import com.fiap.parking.domain.model.Parquimetro;
 import com.fiap.parking.domain.model.Pagamento;
 import com.fiap.parking.domain.model.TipoPagamento;
+import com.fiap.parking.domain.model.TipoParquimetro;
 import com.fiap.parking.domain.repositories.PagamentoRepository;
 import com.fiap.parking.domain.service.PagamentoService;
 import com.fiap.parking.infra.utils.Utils;
@@ -22,7 +23,8 @@ public class PagamentoService {
 
     public Pagamento pagamento(UUID parquimetro_id) {
         Parquimetro parquimetro = this.parquimetroService.findById(parquimetro_id);
-        this.tipoParquimetroVariavel(parquimetro);
+        if (parquimetro.getTipoParquimetro() == TipoParquimetro.VARIAVEL)
+            this.tipoParquimetroVariavel(parquimetro);
 
         return this.pagamentoRepository.save(new Pagamento(parquimetro));
     }

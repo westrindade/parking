@@ -20,18 +20,18 @@ public class ParquimetroVariavelDTO extends ParquimetroDTO {
     public ParquimetroVariavelDTO(UUID id, @NotNull String veiculo, @NotNull String condutor, String longitude,
             String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status,
             List<PeriodoDTO> periodos) {
-        super(id, veiculo, condutor, longitude, latitude, valorHora, valorTotal, status, periodos);
+        super(id, veiculo, condutor, longitude, latitude, valorHora, valorTotal, status, periodos, TipoParquimetro.VARIAVEL);
     }
 
     public Parquimetro toParquimetro() {
-            Parquimetro parquimetro = new Parquimetro(
+        Parquimetro parquimetro = new Parquimetro(
             TipoParquimetro.VARIAVEL,
             getLatitude(),
             getLongitude(),
             getValorHora(),
             getValorTotal(),
             getStatus()
-    );
+        );
         parquimetro.setCondutor(Condutor.builder().cpf(condutor).build());
         parquimetro.setVeiculo(Veiculo.builder().placa(veiculo).build());
         if(periodos != null){
@@ -44,5 +44,9 @@ public class ParquimetroVariavelDTO extends ParquimetroDTO {
 
     public void setPeriodos(List<PeriodoDTO> periodos) {
         this.periodos = periodos;
+    }
+
+    public List<PeriodoDTO> getPeriodo(){
+        return this.periodos;
     }
 }
