@@ -1,6 +1,8 @@
 package com.fiap.parking.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fiap.parking.domain.dto.PeriodoDTO;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,5 +40,15 @@ public class Periodo {
     @ManyToOne
     @JoinColumn(name = "cd_parquimetro", referencedColumnName = "cd_parquimetro", nullable = true)
     private Parquimetro parquimetro;
+
+    public Periodo(UUID id, LocalDateTime dataHoraInicial, LocalDateTime dataHoraFinal) {
+        this.id = id;
+        this.dataHoraInicial = dataHoraInicial;
+        this.dataHoraFinal = dataHoraFinal;
+    }
+
+    public PeriodoDTO toDTO(){
+        return new PeriodoDTO(id, dataHoraInicial, dataHoraFinal);
+    }
 
 }

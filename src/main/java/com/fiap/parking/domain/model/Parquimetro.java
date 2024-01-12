@@ -6,6 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.fiap.parking.domain.dto.ParquimetroDTO;
 import com.fiap.parking.domain.dto.ParquimetroFixoDTO;
@@ -72,7 +73,7 @@ public class Parquimetro {
             this.getValorHora(),
             this.getValorTotal(),
             this.getStatus(),
-            this.getPeriodos()
+            this.getPeriodos().stream().map(Periodo::toDTO).collect(Collectors.toList())
         );
     }
 
@@ -86,7 +87,7 @@ public class Parquimetro {
             this.getValorHora(),
             this.getValorTotal(),
             this.getStatus(),
-            this.getPeriodos()
+            this.getPeriodos().stream().map(Periodo::toDTO).collect(Collectors.toList())
         );
     }
 
