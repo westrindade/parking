@@ -82,8 +82,6 @@ public class ParquimetroService {
         return this.parquimetroRepository.save(parquimetro).toDTO();
     }
 
-    
-
     public ParquimetroDTO condutorInformaResposta(UUID id){
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
                                             .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado") );
