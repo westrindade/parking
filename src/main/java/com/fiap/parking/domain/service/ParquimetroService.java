@@ -10,7 +10,6 @@ import com.fiap.parking.infra.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.beans.factory.annotation.Value;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,8 +29,7 @@ public class ParquimetroService {
     @Autowired
     private CondutorService condutorService;
 
-    @Value("${parquimetro.valorHora}")
-    private BigDecimal valorHora;
+    private BigDecimal valorHora = BigDecimal.valueOf(8.90);
 
     public List<ParquimetroDTO> findAll() {
         var parquimetros = this.parquimetroRepository.findAll();
