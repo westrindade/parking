@@ -25,6 +25,8 @@ public class PagamentoService {
         Parquimetro parquimetro = this.parquimetroService.findById(parquimetro_id);
         if (parquimetro.getTipoParquimetro() == TipoParquimetro.VARIAVEL)
             this.tipoParquimetroVariavel(parquimetro);
+        else
+            this.parquimetroService.condutorInformaResposta(parquimetro_id);
 
         return this.pagamentoRepository.save(new Pagamento(parquimetro));
     }

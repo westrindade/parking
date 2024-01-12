@@ -86,7 +86,8 @@ public class ParquimetroService {
         Parquimetro parquimetro = this.parquimetroRepository.findById(id)
                                             .orElseThrow( () -> new EntidadeNaoEncontrada("excecao.parquimetro.nao.encontrado") );
         parquimetro.setStatus(StatusParquimetro.ENCERRADO);
-        parquimetro.setValorTotal(this.calcularValorTotalVariavel(parquimetro));
+        if (parquimetro.getTipoParquimetro() == TipoParquimetro.VARIAVEL)
+            parquimetro.setValorTotal(this.calcularValorTotalVariavel(parquimetro));
 
         this.encerraUltimoPeriodo(parquimetro.getPeriodos());
         parquimetro = this.parquimetroRepository.save(parquimetro);
