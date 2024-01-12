@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import com.fiap.parking.domain.model.Periodo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fiap.parking.domain.model.StatusParquimetro;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class ParquimetroDTO {
     
         @Getter @Setter
@@ -30,12 +30,12 @@ public abstract class ParquimetroDTO {
         protected BigDecimal valorTotal;
         @Getter @Setter
         protected StatusParquimetro status;
-        @Getter
-        protected List<Periodo> periodos;
+        
+        protected List<PeriodoDTO> periodos;
 
         public ParquimetroDTO(UUID id, @NotNull String veiculo, @NotNull String condutor, String longitude,
                         String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status,
-                        List<Periodo> periodos) {
+                        List<PeriodoDTO> periodos) {
                 this.id = id;
                 this.veiculo = veiculo;
                 this.condutor = condutor;

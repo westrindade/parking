@@ -1,6 +1,7 @@
 package com.fiap.parking.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fiap.parking.domain.model.Condutor;
 import com.fiap.parking.domain.model.TipoPagamento;
 import com.fiap.parking.domain.model.Veiculo;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hibernate.validator.constraints.br.CPF;
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Representa o condutor do veiculo", title = "Condutor")
 public record CondutorDTO (
     @CPF 

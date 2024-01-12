@@ -58,15 +58,13 @@ public class Condutor {
     private String cep;
     @Enumerated(EnumType.STRING)
    
-    @NotNull
-    @Column(name = "tp_pagamento", nullable = false)
+    @Column(name = "tp_pagamento")
     private TipoPagamento tipoPagamentoPadrao;
 
     @NotNull @Size(min = 1)
     @OneToMany(mappedBy = "condutor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Builder.Default
     private List<Veiculo> veiculos = new ArrayList<>();
-    
 
     public Condutor(
         @NotBlank @CPF String cpf, 

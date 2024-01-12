@@ -46,12 +46,12 @@ public class Pagamento {
 
     public PagamentoDTO toDTO() {
         return new PagamentoDTO(
-                this.getId(),
-                this.getStatus(),
-                this.getDataHora(),
-                this.getTipoPagamento(),
-                this.getValor(),
-                this.getParquimetro()
+            this.getId(),
+            this.getStatus(),
+            this.getDataHora(),
+            this.getTipoPagamento(),
+            this.getValor(),
+            this.getParquimetro().toDTO()
         );
     }
 }
