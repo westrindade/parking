@@ -1,5 +1,6 @@
 package com.fiap.parking.domain.controller;
 
+import com.fiap.parking.domain.dto.CondutorDTO;
 import com.fiap.parking.domain.dto.ParquimetroFixoDTO;
 import com.fiap.parking.domain.dto.ParquimetroVariavelDTO;
 import com.fiap.parking.domain.exception.EntidadeNaoEncontrada;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -128,10 +130,40 @@ public class ParquimetroController {
         }
     }
 
+    @Operation(summary = "Retorna uma lista de parquimetro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Retorna a lista parquimetros",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Parquimetros não encontrado",
+                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
+    })
     @GetMapping("/condutor/{cpf}")
     public ResponseEntity<?> listarParquimetroPorCondutor(@PathVariable String cpf){
         try{
             return ResponseEntity.status(HttpStatus.OK).body(this.parquimetroService.findByCondutor(cpf));
+        } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
+    @Operation(summary = "Retorna uma lista de parquimetro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Retorna a lista parquimetros",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CondutorDTO.class)) }),
+            @ApiResponse(responseCode = "404", description = "Parquimetros não encontrado",
+                    content = { @Content(mediaType = "text/plain", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "500", description = "Foi gerada uma exceção",
+                    content = { @Content(mediaType = "application/json", schema = @Schema(implementation = CustomExceptionHandler.class)) }),
+    })
+    @GetMapping("/condutor/{cpf}/status/{status}")
+    public ResponseEntity<?> listarParquimetroPorCondutorEStatus(@PathVariable String cpf,
+                                                                 @NotNull @PathVariable StatusParquimetro status){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(this.parquimetroService.findByCondutorAndStatus(cpf,status));
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception ex) {

@@ -152,4 +152,10 @@ public class ParquimetroService {
         var parquimetros = this.parquimetroRepository.findByCondutor(cpf);
         return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
     }
+
+    public List<ParquimetroDTO> findByCondutorAndStatus(String cpf, StatusParquimetro statusParquimetro) {
+        this.condutorService.findByCpf(cpf);
+        var parquimetros = this.parquimetroRepository.findByCondutorAndStatus(cpf,statusParquimetro);
+        return parquimetros.stream().map(Parquimetro::toDTO).collect(Collectors.toList());
+    }
 }
