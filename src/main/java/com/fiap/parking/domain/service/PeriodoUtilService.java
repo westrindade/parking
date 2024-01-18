@@ -7,11 +7,13 @@ import com.fiap.parking.infra.utils.Utils;
 
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 public class PeriodoUtilService {
@@ -34,17 +36,16 @@ public class PeriodoUtilService {
         return periodo;
     }
 
-    public Optional<Periodo> getDataFinalMaisRecenteDaListaDePeriodos(List<Periodo> listaDePeriodos) {
+    public Optional<Periodo> getDataFinalMaisRecenteDaListaDePeriodos(final List<Periodo> listaDePeriodos) {
         if(listaDePeriodos == null){
             throw new IllegalArgumentException(Utils.getMessage("parametro.lista.periodos.obrigatorio"));
         }
-
-        return listaDePeriodos.stream()
-                .sorted(Comparator.comparing(Periodo::getDataHoraFinal).reversed())
-                .findFirst();
+        
+        final Stream<Periodo> sorted = listaDePeriodos.stream().sorted(Comparator.comparing(Periodo::getDataHoraFinal).reversed());
+		return sorted.findFirst();
     }
 
-    public long calcularIntervaloHoras(LocalDateTime dataInicio, LocalDateTime dataFim){
+    public BigDecimal calcularIntervaloHoras(LocalDateTime dataInicio, LocalDateTime dataFim){
         if(dataInicio == null){
             throw new IllegalArgumentException(Utils.getMessage("parametro.data.inicio.obrigatorio"));
         }
@@ -54,7 +55,7 @@ public class PeriodoUtilService {
         }
        
         final long hours = Duration.between(dataInicio, dataFim).toHours();
-        return hours == 0 ? 1 : hours ;
+        return BigDecimal.valueOf(hours == 0 ? 1 : hours) ;
     }
 
     public long calcularIntervaloMinutos(LocalDateTime dataInicio, LocalDateTime dataFim){

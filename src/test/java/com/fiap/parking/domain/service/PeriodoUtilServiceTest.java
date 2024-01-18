@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -85,9 +86,9 @@ public class PeriodoUtilServiceTest {
     void deveRetornarUmCasoIntervaloSejaInferioraUmaHoraParaCalcularIntervaloHoras(){
         final LocalDateTime dataInicial = LocalDateTime.now();
         final LocalDateTime dataFinal = dataInicial.plusMinutes(30);
-        final long intervaloEmHoras = periodoUtilService.calcularIntervaloHoras(dataInicial, dataFinal);
+        final BigDecimal intervaloEmHoras = periodoUtilService.calcularIntervaloHoras(dataInicial, dataFinal);
 
-        final long umaHora = 1l;
+        final BigDecimal umaHora = BigDecimal.valueOf(1l);
         assertEquals(umaHora, intervaloEmHoras);
     }
 
@@ -95,9 +96,9 @@ public class PeriodoUtilServiceTest {
     void deveRetornarHorasCasoIntervaloSejaSuperiorUmaHoraParaCalcularIntervaloHoras(){
         final LocalDateTime dataInicial = LocalDateTime.now();
         final LocalDateTime dataFinal = dataInicial.plusHours(2);
-        final long intervaloEmHoras = periodoUtilService.calcularIntervaloHoras(dataInicial, dataFinal);
+        final BigDecimal intervaloEmHoras = periodoUtilService.calcularIntervaloHoras(dataInicial, dataFinal);
 
-        final long duasHoras = 2l;
+        final BigDecimal duasHoras = BigDecimal.valueOf(2l);
         assertEquals(duasHoras, intervaloEmHoras);
     }
 

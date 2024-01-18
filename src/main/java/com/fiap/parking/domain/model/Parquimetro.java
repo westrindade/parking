@@ -1,9 +1,7 @@
 package com.fiap.parking.domain.model;
 
-import jakarta.persistence.*;
-import lombok.Data;
-
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -12,12 +10,32 @@ import com.fiap.parking.domain.dto.ParquimetroDTO;
 import com.fiap.parking.domain.dto.ParquimetroFixoDTO;
 import com.fiap.parking.domain.dto.ParquimetroVariavelDTO;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
 @Entity
 @Table(name = "tb_parquimetro")
 public class Parquimetro {
-
-    public Parquimetro(){ }
 
     public Parquimetro(TipoParquimetro tipoParquimetro, String longitude, String latitude, BigDecimal valorHora, BigDecimal valorTotal, StatusParquimetro status) {
         this.tipoParquimetro = tipoParquimetro;
@@ -61,7 +79,8 @@ public class Parquimetro {
     private StatusParquimetro status;
 
     @OneToMany(mappedBy = "parquimetro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Periodo> periodos;
+    @Builder.Default
+    private List<Periodo> periodos = new ArrayList<>();
 
     public ParquimetroVariavelDTO toVariavelDTO() {
         return new ParquimetroVariavelDTO(
@@ -96,5 +115,11 @@ public class Parquimetro {
             return toFixoDTO();
         }
         return toVariavelDTO();
+    }
+    
+    public void encerrarTodosPeriodos() {
+    	for (final Periodo periodo : this.getPeriodos()) {
+            periodo.setAcaoPeriodo(AcaoPeriodo.ENCERRADO);
+        }
     }
 }

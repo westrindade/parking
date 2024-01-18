@@ -71,7 +71,7 @@ public class ParquimetroController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do parquimetro")
             @Valid @RequestBody ParquimetroFixoDTO parquimetroFixoDTO){
         try {
-            var retorno =  this.parquimetroService.save(parquimetroFixoDTO.toParquimetro(), TipoParquimetro.FIXO);
+            var retorno =  this.parquimetroService.save(parquimetroFixoDTO.toParquimetro());
             return ResponseEntity.status(HttpStatus.CREATED).body(retorno);
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
@@ -98,7 +98,7 @@ public class ParquimetroController {
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do parquimetro")
             @RequestBody ParquimetroVariavelDTO parquimetroVariavelDTO){
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.save(parquimetroVariavelDTO.toParquimetro(), TipoParquimetro.VARIAVEL));
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.parquimetroService.save(parquimetroVariavelDTO.toParquimetro()));
         } catch (IllegalArgumentException|EntidadeNaoEncontrada ex){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (JpaSystemException ex) {
