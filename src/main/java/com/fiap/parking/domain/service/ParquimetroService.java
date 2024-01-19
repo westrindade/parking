@@ -84,12 +84,12 @@ public class ParquimetroService {
             if (parquimetro.getPeriodos().isEmpty()) {
             	throw new IllegalArgumentException(Utils.getMessage("excecao.periodo.nao.informado"));
         	}
-        } 
+        }
         
         if (TipoParquimetro.VARIAVEL == parquimetro.getTipoParquimetro()) {
-            parquimetro.getPeriodos().add(this.periodoUtilService.adicionaPeriodoVariavel(LocalDateTime.now(), parquimetro));
+            //parquimetro.getPeriodos().add(this.periodoUtilService.adicionaPeriodoVariavel(LocalDateTime.now(), parquimetro));
+            parquimetro.setPeriodos(Collections.singletonList(this.periodoUtilService.adicionaPeriodoVariavel(LocalDateTime.now(), parquimetro)));
         }
-
 
         parquimetro.setCondutor(condutor.toCondutor());
         parquimetro.setVeiculo(veiculo.toVeiculo());
